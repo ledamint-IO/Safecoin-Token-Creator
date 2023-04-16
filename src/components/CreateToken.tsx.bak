@@ -15,7 +15,7 @@ import {
   createCreateMetadataAccountInstruction,
 } from "@leda-mint-io/lpl-token-metadata";
 
-const PROGRAM_ID = 'WbMTNyvtk8vSMu2AmXV7mKuYrADRNw9GSkNtWKsZ7qe'
+const PROGRAM_ID 'WbMTNyvtk8vSMu2AmXV7mKuYrADRNw9GSkNtWKsZ7qe'
 import { FC, useCallback, useState } from "react";
 import { notify } from "utils/notifications";
 import { ClipLoader } from "react-spinners";

@@ -6,7 +6,7 @@ import {
 } from "@heroicons/react/outline";
 import { XIcon } from "@heroicons/react/solid";
 import useNotificationStore from "../stores/useNotificationStore";
-import { useConnection } from "@solana/wallet-adapter-react";
+import { useConnection } from "@j0nnyboi/wallet-adapter-react";
 import { getExplorerUrl } from "../utils/explorer";
 import { useNetworkConfiguration } from "contexts/NetworkConfigurationProvider";
 

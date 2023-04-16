@@ -2,7 +2,7 @@
 import { FC, useEffect } from "react";
 
 // Wallet
-import { useWallet, useConnection } from "@solana/wallet-adapter-react";
+import { useWallet, useConnection } from "@j0nnyboi/wallet-adapter-react";
 
 // Components
 import { RequestAirdrop } from "components/RequestAirdrop";

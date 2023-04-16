@@ -1,4 +1,4 @@
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useConnection, useWallet } from "@j0nnyboi/wallet-adapter-react";
 import {
   Keypair,
   LAMPORTS_PER_SOL,
@@ -6,7 +6,7 @@ import {
   SystemProgram,
   Transaction,
   TransactionSignature,
-} from "@solana/web3.js";
+} from "@safecoin/web3.js";
 import { FC, useCallback, useState } from "react";
 import { notify } from "../utils/notifications";
 

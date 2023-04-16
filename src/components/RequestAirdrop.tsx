@@ -1,5 +1,5 @@
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { LAMPORTS_PER_SOL, TransactionSignature } from "@solana/web3.js";
+import { useConnection, useWallet } from "@j0nnyboi/wallet-adapter-react";
+import { LAMPORTS_PER_SOL, TransactionSignature } from "@safecoin/web3.js";
 import { FC, useCallback } from "react";
 import { notify } from "../utils/notifications";
 import useUserSOLBalanceStore from "../stores/useUserSOLBalanceStore";

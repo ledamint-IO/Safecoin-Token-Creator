@@ -1,5 +1,5 @@
 import create, { State } from "zustand";
-import { Connection, PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { Connection, PublicKey, LAMPORTS_PER_SOL } from "@safecoin/web3.js";
 
 interface UserSOLBalanceStore extends State {
   balance: number;
