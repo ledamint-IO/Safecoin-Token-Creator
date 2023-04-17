@@ -12,12 +12,18 @@ export function getExplorerUrl(
       cluster = `custom&customUrl=${encodeURIComponent(
         "http://127.0.0.1:8899",
       )}`;
-    } else if (endpoint === "https://api.devnet.solana.com") {
+    } else if (endpoint === "https://api.devnet.safecoin.org") {
       cluster = "devnet";
+    }
+	else if (endpoint === "https://api.testnet.safecoin.org") {
+      cluster = "testnet";
+    }
+	else if (endpoint === "https://api.mainnet-beta.safecoin.org") {
+      cluster = "mainnet";
     }
 
     return cluster ? `?cluster=${cluster}` : "";
   };
 
-  return `https://explorer.solana.com/${itemType}/${viewTypeOrItemAddress}${getClusterUrlParam()}`;
+  return `https://explorer.safecoin.org/${itemType}/${viewTypeOrItemAddress}${getClusterUrlParam()}`;
 }

@@ -6,7 +6,7 @@ const Upload: NextPage = (props) => {
   return (
     <div>
       <Head>
-        <title>Solana Token Creator - Upload Metadata</title>
+        <title>Safecoin Token Creator - Upload Metadata</title>
         <meta name="description" content="Upload metadata to IPFS" />
       </Head>
       <UploadView />

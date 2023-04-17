@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@heroicons/react": "^1.0.5",
-    "@leda-mint-io/lpl-token-metadata": "^2.2.4",
-    "@safecoin/safe-token": "^0.2.0",
+    "@leda-mint-io/lpl-token-metadata": "^2.8.6",
+    "@safecoin/safe-token": "^0.3.5",
     "@j0nnyboi/wallet-adapter-base": "^0.9.22",
     "@j0nnyboi/wallet-adapter-react": "^0.15.34",
     "@j0nnyboi/wallet-adapter-react-ui": "^0.9.35",

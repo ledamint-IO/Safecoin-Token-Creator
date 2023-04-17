@@ -1,5 +1,5 @@
 import { useConnection, useWallet } from "@j0nnyboi/wallet-adapter-react";
-import { LAMPORTS_PER_SOL, TransactionSignature } from "@safecoin/web3.js";
+import { LAMPORTS_PER_SAFE, TransactionSignature } from "@safecoin/web3.js";
 import { FC, useCallback } from "react";
 import { notify } from "../utils/notifications";
 import useUserSOLBalanceStore from "../stores/useUserSOLBalanceStore";
@@ -23,7 +23,7 @@ export const RequestAirdrop: FC = () => {
     let signature: TransactionSignature = "";
 
     try {
-      signature = await connection.requestAirdrop(publicKey, LAMPORTS_PER_SOL);
+      signature = await connection.requestAirdrop(publicKey, LAMPORTS_PER_SAFE);
       notify({
         type: "success",
         message: "Airdrop successful!",
@@ -55,7 +55,7 @@ export const RequestAirdrop: FC = () => {
         <div className="text-xl font-normal">Request airdrop</div>
       </div>
       <button
-        className="... group btn m-2 w-60 animate-pulse bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 disabled:animate-none "
+        className="... group btn m-2 w-60 animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 disabled:animate-none "
         onClick={onClick}
         disabled={!publicKey}
       >

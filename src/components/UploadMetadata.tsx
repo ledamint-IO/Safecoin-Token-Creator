@@ -63,7 +63,7 @@ export const UploadMetadata: FC = () => {
               <p>
                 You can get one
                 <a
-                  className="cursor-pointer font-medium text-purple-500 hover:text-indigo-500"
+                  className="cursor-pointer font-medium text-green-500 hover:text-indigo-500"
                   href="https://web3.storage/tokens/"
                   target="_blank"
                   rel="noreferrer"
@@ -102,7 +102,7 @@ export const UploadMetadata: FC = () => {
                     strokeLinejoin="round"
                   />
                 </svg>
-                <label className="cursor-pointer font-medium text-purple-500 hover:text-indigo-500">
+                <label className="cursor-pointer font-medium text-green-500 hover:text-indigo-500">
                   <span>Upload an image</span>
                   <input
                     type="file"
@@ -128,7 +128,7 @@ export const UploadMetadata: FC = () => {
           <div className="mt-4 sm:grid sm:grid-cols-2 sm:gap-4">
             <div className="m-auto p-2">
               <div className="text-xl font-normal">Token symbol</div>
-              <p>{"Abbreviated name (e.g. Solana -> SOL)."}</p>
+              <p>{"Abbreviated name (e.g. Safecoin -> SAFE)."}</p>
             </div>
             <div className="m-auto p-2">
               <input
@@ -151,7 +151,7 @@ export const UploadMetadata: FC = () => {
           </div>
           <div className="mt-4">
             <button
-              className="... btn m-2 animate-pulse bg-gradient-to-r from-[#9945FF] to-[#14F195] px-8 hover:from-pink-500 hover:to-yellow-500"
+              className="... btn m-2 animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195]  px-8 hover:from-pink-500 hover:to-yellow-500"
               onClick={uploadMetadata}
             >
               Upload Metadata

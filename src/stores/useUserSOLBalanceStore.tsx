@@ -1,5 +1,5 @@
 import create, { State } from "zustand";
-import { Connection, PublicKey, LAMPORTS_PER_SOL } from "@safecoin/web3.js";
+import { Connection, PublicKey, LAMPORTS_PER_SAFE } from "@safecoin/web3.js";
 
 interface UserSOLBalanceStore extends State {
   balance: number;
@@ -12,7 +12,7 @@ const useUserSOLBalanceStore = create<UserSOLBalanceStore>((set, _get) => ({
     let balance = 0;
     try {
       balance = await connection.getBalance(publicKey, "confirmed");
-      balance = balance / LAMPORTS_PER_SOL;
+      balance = balance / LAMPORTS_PER_SAFE;
     } catch (e) {
       console.log(`error getting balance: `, e);
     }

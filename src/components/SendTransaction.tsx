@@ -1,7 +1,7 @@
 import { useConnection, useWallet } from "@j0nnyboi/wallet-adapter-react";
 import {
   Keypair,
-  LAMPORTS_PER_SOL,
+  LAMPORTS_PER_SAFE,
   PublicKey,
   SystemProgram,
   Transaction,
@@ -39,7 +39,7 @@ export const SendTransaction: FC = () => {
         SystemProgram.transfer({
           fromPubkey: publicKey,
           toPubkey: creatorAddress,
-          lamports: LAMPORTS_PER_SOL * Number(amount),
+          lamports: LAMPORTS_PER_SAFE * Number(amount),
         }),
       );
 
@@ -65,7 +65,7 @@ export const SendTransaction: FC = () => {
   return (
     <div className="mt-4">
       <div className="p-2">
-        <div className="text-xl font-normal">Send some SOL to creator</div>
+        <div className="text-xl font-normal">Send some SAFE to the creator</div>
       </div>
       <div className="p-2">
         <input
@@ -76,7 +76,7 @@ export const SendTransaction: FC = () => {
         />
       </div>
       <button
-        className="... group btn m-2 w-60 animate-pulse bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 disabled:animate-none "
+        className="... group btn m-2 w-60 animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 disabled:animate-none "
         onClick={onClick}
         disabled={!publicKey}
       >

@@ -13,9 +13,10 @@ import {
 } from "@safecoin/safe-token";
 import {
   createCreateMetadataAccountInstruction,
+  PROGRAM_ID,
 } from "@leda-mint-io/lpl-token-metadata";
 
-const PROGRAM_ID = 'WbMTNyvtk8vSMu2AmXV7mKuYrADRNw9GSkNtWKsZ7qe'
+
 import { FC, useCallback, useState } from "react";
 import { notify } from "utils/notifications";
 import { ClipLoader } from "react-spinners";
@@ -38,10 +39,11 @@ export const CreateToken: FC = () => {
       notify({ type: "error", message: `Wallet not connected!` });
       return;
     }
-
+	//const PROGRAM_ID = new PublicKey('WbMTNyvtk8vSMu2AmXV7mKuYrADRNw9GSkNtWKsZ7qe');
+	console.log(PROGRAM_ID.toString());
+	console.log(TOKEN_PROGRAM_ID.toString());
     const lamports = await getMinimumBalanceForRentExemptMint(connection);
     const mintKeypair = Keypair.generate();
-
     setIsLoading(true);
     try {
       const tx = new Transaction().add(
@@ -72,12 +74,14 @@ export const CreateToken: FC = () => {
                 ],
                 PROGRAM_ID,
               )
+			  
             )[0],
             mint: mintKeypair.publicKey,
             mintAuthority: publicKey,
             payer: publicKey,
             updateAuthority: publicKey,
           },
+		  
           {
             createMetadataAccountArgs: {
               data: {
@@ -136,7 +140,7 @@ export const CreateToken: FC = () => {
           <div className="mt-4 sm:grid sm:grid-cols-2 sm:gap-4">
             <div className="m-auto p-2">
               <div className="text-xl font-normal">Token symbol</div>
-              <p>{"Abbreviated name (e.g. Solana -> SOL)."}</p>
+              <p>{"Abbreviated name (e.g. Safecoin -> SAFE)."}</p>
             </div>
             <div className="m-auto p-2">
               <input
@@ -152,7 +156,7 @@ export const CreateToken: FC = () => {
               <p>
                 Paste an existing one or create new
                 <a
-                  className="cursor-pointer font-medium text-purple-500 hover:text-indigo-500"
+                  className="cursor-pointer font-medium text-green-500 hover:text-indigo-500"
                   href="./upload"
                 >
                   {" here"}
@@ -185,7 +189,7 @@ export const CreateToken: FC = () => {
           </div>
           <div className="mt-4">
             <button
-              className="... btn m-2 animate-pulse bg-gradient-to-r from-[#9945FF] to-[#14F195] px-8 hover:from-pink-500 hover:to-yellow-500"
+              className="... btn m-2 animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195] px-8 hover:from-pink-500 hover:to-yellow-500"
               onClick={createToken}
             >
               Create token
