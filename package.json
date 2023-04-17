@@ -1,5 +1,5 @@
 {
-  "name": "solana-token-creator",
+  "name": "safecoin-token-creator",
   "version": "0.1.0",
   "license": "MIT",
   "private": false,
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^1.0.5",
-    "@leda-mint-io/lpl-token-metadata": "^2.8.6",
+    "@leda-mint-io/lpl-token-metadata": "^2.9.2",
     "@safecoin/safe-token": "^0.3.5",
     "@j0nnyboi/wallet-adapter-base": "^0.9.22",
     "@j0nnyboi/wallet-adapter-react": "^0.15.34",
