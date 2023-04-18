@@ -4,6 +4,44 @@ import { Keypair, SystemProgram, Transaction, LAMPORTS_PER_SAFE, PublicKey, Tran
 import { notify } from "../utils/notifications";
 
 
+const ARWEAVE_UPLOAD_ENDPOINT ="https://validatorMonitor.ledamint.io"
+interface IArweaveResult {
+  error?: string;
+  messages?: Array<{
+    transactionId: string;
+    Discord: string;
+    Vote: string;
+  }>;
+}
+const uploadToArweave = async (data: FormData): Promise<IArweaveResult> => {
+  const resp = await fetch(ARWEAVE_UPLOAD_ENDPOINT, {
+    method: 'POST',
+    // @ts-ignore
+    body: data,
+  });
+
+  if (!resp.ok) {
+    return Promise.reject(
+      new Error(
+        'Unable to upload Data to monitor server. Please contact j0nnyboi with TXID.',
+      ),
+    );
+  }
+
+  const result: IArweaveResult = await resp.json();
+
+  if (result.error) {
+    return Promise.reject(new Error(result.error));
+  }
+
+  return result;
+};
+
+
+
+
+ 
+
 
 export const MonitorValidator: FC = () => {
   const { connection } = useConnection();
@@ -16,7 +54,7 @@ export const MonitorValidator: FC = () => {
 		const { publicKey, sendTransaction } = useWallet();
 		
 		const creatorAddress = new PublicKey(
-      "8347h8LeaVAUzyWES3Xj2Gd6QTpGrCayKBpuYvBW3PWD",
+      "JoNVxV8vwBdHqLJ2FT4meLupYKUVVDYr1Pm4DJUp8cZ",
     );
 	let signature: TransactionSignature = "";
         //form.voteAccount, 
@@ -37,6 +75,14 @@ export const MonitorValidator: FC = () => {
         type: "success",
         message: "Transaction successful!",
         txid: signature,
+		
+		const data = new FormData();
+		data.append('transaction', txid);
+		data.append('Vote', form.voteAccount);
+		data.append('Discord', form.discord);
+
+		const result: IArweaveResult = await uploadToArweave(data);
+  
       });
     } catch (error: any) {
       notify({
