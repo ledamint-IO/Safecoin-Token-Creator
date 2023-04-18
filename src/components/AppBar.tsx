@@ -14,7 +14,7 @@ export const AppBar: FC = (props) => {
       <div className="navbar flex flex-row md:mb-2 shadow-lg bg-neutral text-neutral-content">
         <div className="navbar-start">
           <div className="hidden sm:inline w-22 h-22 md:p-2">
-             <a href="https://market.ledamint.io" target="_blank"><img src="logo.svg" alt="https://market.ledamint.io" width="200" height="200"/></a>
+             <a href="https://market.ledamint.io" target="_blank" rel="noreferrer"><img src="logo.svg" alt="https://market.ledamint.io" width="200" height="200"/></a>
           </div>
         </div>
 
@@ -70,7 +70,7 @@ export const AppBar: FC = (props) => {
             </div>
             <ul
               tabIndex={0}
-              className="dropdown-content menu rounded-box bg-base-100 p-2 shadow sm:w-52"
+              className="dropdown-content menu rounded-box bg-green-300 p-2 shadow sm:w-52"
             >
               <li>
                 <div className="form-control">
