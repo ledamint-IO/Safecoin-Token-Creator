@@ -33,6 +33,9 @@ export const AppBar: FC = (props) => {
               </a>
             </Link>
 			<Link href="/validator">
+            <a className="btn btn-ghost rounded-btn btn-sm">Validator Monitor Setup</a>
+          </Link>
+		  <Link href="/validatorMonitor">
             <a className="btn btn-ghost rounded-btn btn-sm">Validator Monitor</a>
           </Link>
             <Link href="/misc">

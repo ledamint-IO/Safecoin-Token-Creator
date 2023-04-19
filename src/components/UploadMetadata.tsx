@@ -3,6 +3,7 @@ import { notify } from "utils/notifications";
 import { Web3Storage } from "web3.storage";
 import { ClipLoader } from "react-spinners";
 
+
 export const UploadMetadata: FC = () => {
   const [ipfsToken, setIpfsToken] = useState("");
   const [imageFile, setImageFile] = useState(null);
@@ -21,6 +22,7 @@ export const UploadMetadata: FC = () => {
 
   const uploadMetadata = async () => {
     const storage = new Web3Storage({ token: ipfsToken });
+	
     setIsLoading(true);
     try {
       const imageCid = await storage.put([imageFile]);
@@ -153,8 +155,8 @@ export const UploadMetadata: FC = () => {
             <button
               className="... btn m-2 animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195]  px-8 hover:from-pink-500 hover:to-yellow-500"
               onClick={uploadMetadata}
-            >
-              Upload Metadata
+			>
+              <span>Upload Metadata</span>
             </button>
           </div>
         </div>

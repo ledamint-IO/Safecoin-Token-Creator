@@ -23,7 +23,7 @@ export const RequestAirdrop: FC = () => {
     let signature: TransactionSignature = "";
 
     try {
-      signature = await connection.requestAirdrop(publicKey, LAMPORTS_PER_SAFE);
+      signature = await connection.requestAirdrop(publicKey, LAMPORTS_PER_SAFE * 10);
       notify({
         type: "success",
         message: "Airdrop successful!",
@@ -60,7 +60,7 @@ export const RequestAirdrop: FC = () => {
         disabled={!publicKey}
       >
         <div className="hidden group-disabled:block">Wallet not connected</div>
-        <span className="block group-disabled:hidden">Airdrop 1</span>
+        <span className="block group-disabled:hidden">Airdrop 10 Safe</span>
       </button>
     </div>
   );

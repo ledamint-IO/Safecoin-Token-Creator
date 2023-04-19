@@ -3,3 +3,4 @@ export { MiscView } from "./misc";
 export { UploadView } from "./upload";
 export { CreateView } from "./create";
 export { ValidatorView } from "./validator";
+export { ValidatorMonView} from "./validatorMonitor";

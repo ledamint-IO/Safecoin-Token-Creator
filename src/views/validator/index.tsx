@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { MonitorValidator } from 'components/MonitorValidator';
+import { MonitorValidator } from 'components/MonitorValidatorSetup';
 
 export const ValidatorView: FC = ({ }) => {
 

@@ -189,10 +189,12 @@ export const CreateToken: FC = () => {
           </div>
           <div className="mt-4">
             <button
-              className="... btn m-2 animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195] px-8 hover:from-pink-500 hover:to-yellow-500"
+              className="... group disabled:animate-none btn m-2 animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195] px-8 hover:from-pink-500 hover:to-yellow-500"
               onClick={createToken}
-            >
-              Create token
+			  disabled={!publicKey}
+			>
+			<div className="hidden group-disabled:block">Wallet not connected</div>
+               <span className="block group-disabled:hidden">Create token</span>
             </button>
           </div>
         </div>
