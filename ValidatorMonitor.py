@@ -7,7 +7,7 @@ import json
 import base64
 
 import sqlite3
-
+import threading
 import requests
 from time import gmtime, strftime,sleep
 
@@ -22,6 +22,8 @@ cursor = sqlite3.connect('ValidatorDB.db')
 api_endpoints={"mainnet":"https://api.mainnet-beta.safecoin.org",
                "devnet":"https://api.devnet.safecoin.org",
                "testnet":"https://api.testnet.safecoin.org"}
+
+ValidatorCheckTime = 5 #time in minutes between checking for you validator is off line
 
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
@@ -170,7 +172,100 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             
 
 
+def StarthttpServer():
+    httpd = HTTPServer(('127.0.0.1', 8080), SimpleHTTPRequestHandler)
+    #httpd = HTTPServer(('185.213.27.58', 80), SimpleHTTPRequestHandler)
+    httpd.serve_forever()
+    
 
-httpd = HTTPServer(('127.0.0.1', 8080), SimpleHTTPRequestHandler)
-#httpd = HTTPServer(('185.213.27.58', 80), SimpleHTTPRequestHandler)
-httpd.serve_forever()
+def DiscordSend(StringToSend,Discord_Web_Hock):
+    try:
+        webhook = Webhook.from_url(Discord_Web_Hock, adapter=RequestsWebhookAdapter())
+        webhook.send(StringToSend)
+    except:
+        pass
+
+
+
+
+
+
+x = threading.Thread(target=StarthttpServer)
+#y = threading.Thread(target=StartValidatorMonitoring)
+x.start()
+#y.start()
+
+
+
+Minpre = 0
+Daypre = 0
+hourpre = 99
+Counter = 99
+AlarmSent = False
+while True:
+        sleep(10)
+        Min = strftime("%M", gmtime())
+        hour = strftime("%H", gmtime())
+        
+        if(hour != hourpre):
+                hourpre = hour
+                AlarmSent = False
+                cursor = sqlite3.connect('ValidatorDB.db')
+                cur = cursor.cursor()
+                cur.execute("SELECT * FROM ValidatorPayment")
+                rows = cur.fetchall()
+                cursor.close()
+                AlarmLST = []
+                """
+                day = strftime("%d", gmtime())
+                if(day != Daypre):
+                    Daypre = day
+                    if(client.is_connected()): 
+                        VoteBalance = int(client.get_balance(ValidatorVote)['result']['value'])/1000000000
+                        print("Vote account balance = ",VoteBalance)
+                        if(VoteBalance > VoteBalanceWarn):
+                            DiscordSend("you have earnt to much safe, to be on your validator, time to move it,amount is %s use (~/Safecoin/target/release/safecoin withdraw-from-vote-account VoteAddress DesternationWallet amount)"% VoteBalance)
+                        IDBalance = int(client.get_balance(ValidatorID)['result']['value'])/1000000000
+                        print("Identity account balance = ",IDBalance)
+                        if(IDBalance < IdentityBalanceWarn):
+                            DiscordSend("Running out of safe, you only have %s left to vote with, please add some to address %s" % (IDBalance,ValidatorID))
+                    else:
+                        client = Client(api_endpoint)
+        """        
+        if(Min != Minpre):
+                Minpre = Min
+                Counter += 1
+                if(Counter >= ValidatorCheckTime):
+                        Counter = 0 
+                        for row in rows:
+                                print(row)
+                                #endpint = api_endpoints[row[5]]
+                                endpint = api_endpoints['mainnet']
+                                print(endpint)
+                                client = Client(endpint)
+                                ValID = row[2].split()
+                                print(ValID)
+                                if(client.is_connected() == True):
+                                        validatorList = (client.get_vote_accounts()['result']['delinquent'])
+                                        #print(validatorList)
+                                        for vals in validatorList:
+                                            nodePubkey = vals['nodePubkey']
+                                            votePubkey = vals['votePubkey']
+                                            print(nodePubkey,votePubkey)
+                                            for ValidatorID in ValID:
+                                                if(ValidatorID in nodePubkey or ValidatorID in votePubkey):
+                                                    print("^^^^^^^^^^^^^^^^^^^found my Validator^^^^^^^^^^^^^^^^^^")
+                                                    for node,vot in AlarmLST:
+                                                        if(ValidatorID in node or ValidatorID in votePubkey):
+                                                            pass
+
+                                                        else:#need to make it so its pubkey so 2 differnt people can monitor same validator
+                                                            DiscordSend(StringToSend,Discord_Web_Hock)
+                                                            AlarmLST.append(nodePubkey + "-" + votePubkey)
+
+                                else:
+                                    client = Client(api_endpoint)                        
+                        
+
+    
+    
