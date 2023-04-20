@@ -56,7 +56,7 @@ export const ValidatorMonitor: FC = () => {
   <div  className="my-5">   
   
  
-	  My Montoring Validators that are Delinquent
+	  <p>My Montoring Validators that are Delinquent</p>
 	  <textarea
 	   className="form-control block mb-2 w-full px-2 py-2 font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
         id="Valid"
@@ -65,7 +65,7 @@ export const ValidatorMonitor: FC = () => {
         rows={2}
 		cols="115"
       />
-	  All delinquent Validators
+	  <p>All delinquent Validators</p>
 	   <textarea
 	   className="form-control block mb-2 w-full px-2 py-2 font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
 	   id="allValid"

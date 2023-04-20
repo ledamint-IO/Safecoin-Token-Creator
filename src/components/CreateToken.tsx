@@ -40,8 +40,8 @@ export const CreateToken: FC = () => {
       return;
     }
 	//const PROGRAM_ID = new PublicKey('WbMTNyvtk8vSMu2AmXV7mKuYrADRNw9GSkNtWKsZ7qe');
-	console.log(PROGRAM_ID.toString());
-	console.log(TOKEN_PROGRAM_ID.toString());
+	//console.log(PROGRAM_ID.toString());
+	//console.log(TOKEN_PROGRAM_ID.toString());
     const lamports = await getMinimumBalanceForRentExemptMint(connection);
     const mintKeypair = Keypair.generate();
     setIsLoading(true);
@@ -175,7 +175,7 @@ export const CreateToken: FC = () => {
           <div className="mt-4 sm:grid sm:grid-cols-2 sm:gap-4">
             <div className="m-auto p-2">
               <div className="text-xl font-normal">Token decimals</div>
-              <p>Default value is 9 for solana.</p>
+              <p>Default value is 9 for safecoin.</p>
             </div>
             <div className="m-auto p-2">
               <input

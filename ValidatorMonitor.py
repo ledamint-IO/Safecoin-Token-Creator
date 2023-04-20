@@ -10,11 +10,12 @@ import sqlite3
 import threading
 import requests
 from time import gmtime, strftime,sleep
-
+from discord import Webhook, RequestsWebhookAdapter
 from safecoin.keypair import Keypair
 from safecoin.rpc.api import Client
 from safecoin.rpc.types import MemcmpOpts
 from safecoin.publickey import PublicKey
+
 
   
 cursor = sqlite3.connect('ValidatorDB.db')
@@ -106,7 +107,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                             for vals in validatorList:
                                 nodePubkey = vals['nodePubkey']
                                 votePubkey = vals['votePubkey']
-                                print(nodePubkey,votePubkey)
+                                #print(nodePubkey,votePubkey)
                                 for ValidatorID in ValID:
                                     if(ValidatorID in nodePubkey or ValidatorID in votePubkey):
                                         print("^^^^^^^^^^^^^^^^^^^found my Validator^^^^^^^^^^^^^^^^^^")
@@ -158,13 +159,13 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             print('pubkey : ', pubkey)
             EmailAdd = "" #for future
 
-            discordTest = DiscordSend("Confirming your web hock for validator monitoring",Discord)
+            discordTest = DiscordSend("Confirming your web hook for validator monitoring",Discord)
             if(discordTest == False):
                 self.send_response(200)
                 self.send_header('Access-Control-Allow-Origin', '*')
                 self.send_header('Content-type', 'application/json')
                 self.end_headers()
-                self.wfile.write(json.dumps('Discord webhock failed, please try again').encode()
+                self.wfile.write(json.dumps('Discord webhook failed, please try again').encode())
                 return
             
 
@@ -265,7 +266,7 @@ while True:
                                         for vals in validatorList:
                                             nodePubkey = vals['nodePubkey']
                                             votePubkey = vals['votePubkey']
-                                            print(nodePubkey,votePubkey)
+                                            #print(nodePubkey,votePubkey)
                                             for ValidatorID in ValID:
                                                 if(ValidatorID in nodePubkey or ValidatorID in votePubkey):
                                                     print("^^^^^^^^^^^^^^^^^^^found my Validator^^^^^^^^^^^^^^^^^^")

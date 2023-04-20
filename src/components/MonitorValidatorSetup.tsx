@@ -175,11 +175,11 @@ export const MonitorValidator: FC = () => {
         </div>
       )}
   <h3>
-  Costs 50 safe to add or update a validator to monitor, 
+  <p>Costs 50 safe to add or 1 safe to update a validator to monitor</p>
   </h3>
  
     <div className="my-6">
-	To monitor more then 1 Validator, please place a space between each validator pubkey
+	<p>To monitor more then 1 Validator, please place a space between each validator pubkey</p>
       <input
         type="text"
         className="form-control block mb-2 w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
