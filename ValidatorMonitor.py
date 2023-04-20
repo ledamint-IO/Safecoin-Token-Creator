@@ -25,7 +25,16 @@ api_endpoints={"mainnet":"https://api.mainnet-beta.safecoin.org",
 
 ValidatorCheckTime = 5 #time in minutes between checking for you validator is off line
 
+def DiscordSend(StringToSend,Discord_Web_Hock):
+    try:
+        print(StringToSend)
+        webhook = Webhook.from_url(Discord_Web_Hock, adapter=RequestsWebhookAdapter())
+        webhook.send(StringToSend)
+        return True
+    except:
+        return False
 
+    
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         
     def do_GET(self):
@@ -149,6 +158,16 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             print('pubkey : ', pubkey)
             EmailAdd = "" #for future
 
+            discordTest = DiscordSend("Confirming your web hock for validator monitoring",Discord)
+            if(discordTest == False):
+                self.send_response(200)
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.send_header('Content-type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps('Discord webhock failed, please try again').encode()
+                return
+            
+
             cursor = sqlite3.connect('ValidatorDB.db')
             cursor.execute("""CREATE TABLE IF NOT EXISTS ValidatorPayment
                 (pubkey TEXT PRIMARY KEY,tx TEXT,Vote TEXT,EmailAdd TEXT,Discord TEXT,Chain TEXT);""")
@@ -178,12 +197,7 @@ def StarthttpServer():
     httpd.serve_forever()
     
 
-def DiscordSend(StringToSend,Discord_Web_Hock):
-    try:
-        webhook = Webhook.from_url(Discord_Web_Hock, adapter=RequestsWebhookAdapter())
-        webhook.send(StringToSend)
-    except:
-        pass
+
 
 
 
@@ -215,7 +229,7 @@ while True:
                 cur.execute("SELECT * FROM ValidatorPayment")
                 rows = cur.fetchall()
                 cursor.close()
-                AlarmLST = []
+                AlarmLST = ['jonnyboi-jonnyboi-jonnyboi']
                 """
                 day = strftime("%d", gmtime())
                 if(day != Daypre):
@@ -255,16 +269,19 @@ while True:
                                             for ValidatorID in ValID:
                                                 if(ValidatorID in nodePubkey or ValidatorID in votePubkey):
                                                     print("^^^^^^^^^^^^^^^^^^^found my Validator^^^^^^^^^^^^^^^^^^")
-                                                    for node,vot in AlarmLST:
-                                                        if(ValidatorID in node or ValidatorID in votePubkey):
-                                                            pass
+                                                    AlarmTobeSent = True
+                                                    for LST in AlarmLST:
+                                                        LSTsplit = LST.split('-')
+                                                        print(LSTsplit)
+                                                        if(row[0] in LSTsplit[2] and (ValidatorID in LSTsplit[1] or ValidatorID in LSTsplit[0])):
+                                                            AlarmTobeSent = False
 
-                                                        else:#need to make it so its pubkey so 2 differnt people can monitor same validator
-                                                            DiscordSend(StringToSend,Discord_Web_Hock)
-                                                            AlarmLST.append(nodePubkey + "-" + votePubkey)
+                                                    if(AlarmTobeSent):
+                                                        DiscordSend("Validator: %s, you are monitoring has gone off line"%ValidatorID,row[4])
+                                                        AlarmLST.append(nodePubkey + "-" + votePubkey + "-" + row[0])#row[0] is wallet pubkey
 
-                                else:
-                                    client = Client(api_endpoint)                        
+                                #else:
+                                #    client = Client(api_endpoint)                        
                         
 
     
