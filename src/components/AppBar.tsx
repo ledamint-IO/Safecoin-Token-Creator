@@ -32,6 +32,11 @@ export const AppBar: FC = (props) => {
                 Upload metadata
               </a>
             </Link>
+            <Link href="/edit">
+              <a className="btn btn-ghost rounded-btn btn-sm">
+                edit token
+              </a>
+            </Link>
 			<Link href="/validator">
             <a className="btn btn-ghost rounded-btn btn-sm">Validator Monitor Setup</a>
           </Link>
