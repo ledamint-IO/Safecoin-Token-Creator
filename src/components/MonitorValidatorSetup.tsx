@@ -19,7 +19,6 @@ interface IValidatorResult {
     Discord: string;
     Vote: string;
 	Chain: string;
-	Discord: string;
   }>;
 }
 const uploadToValidator = async (data: FormData): Promise<IValidatorResult> => {
@@ -119,13 +118,13 @@ export const MonitorValidator: FC = () => {
 		data.append('Vote', form.voteAccount);
 		data.append('Discord', form.discord);
 		data.append('Chain', networkConfiguration);
-		data.append('publicKey', publicKey);
+		data.append('publicKey', publicKey.toString());
 
-		const result: IArweaveResult = await uploadToValidator(data);
+		const result: IValidatorResult = await uploadToValidator(data);
 		notify({
         type: "success",
         message: `Added to Monitoring server`,
-        description: result,
+        description: String(result),
       });
 		
 		 //window.location.replace('/');
@@ -215,7 +214,7 @@ export const MonitorValidator: FC = () => {
         placeholder=""
 		value=""
         rows={20}
-		cols="115"
+		    cols={115}
       />
     </div>
 	 </div>
