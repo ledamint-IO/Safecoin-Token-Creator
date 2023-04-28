@@ -10,7 +10,7 @@ const VALIDATOR_UPLOAD_ENDPOINT ="http://127.0.0.1:8080";
 import {
   useNetworkConfiguration,
 } from "../contexts/NetworkConfigurationProvider";
- 
+
 
 interface IValidatorResult {
   error?: string;
@@ -53,7 +53,7 @@ export async function ValData(
   return body;
 }
 
- 
+
 
 
 export const MonitorValidator: FC = () => {
@@ -64,7 +64,7 @@ export const MonitorValidator: FC = () => {
   const [isLoading, setIsLoading] = useState(false);
  const { networkConfiguration } = useNetworkConfiguration();
  //console.log('Networt ' + networkConfiguration);
-  
+
   const onClick = useCallback(async (form) => {
 
 	  if(form.voteAccount == ""){
@@ -73,9 +73,9 @@ export const MonitorValidator: FC = () => {
         type: "error",
         message: "No Vote Account",
 		});
-		return	
+		return
 		}
-		
+
 	    if(form.discord == ""){
 			console.log("not discord hook");
 			notify({
@@ -83,16 +83,16 @@ export const MonitorValidator: FC = () => {
         message: "No Discord Webhook",
 		});
 		return
-		}
-		
+  }
+
 		//document.location.href = '/upload';
 		const creatorAddress = new PublicKey(
       "JoNVxV8vwBdHqLJ2FT4meLupYKUVVDYr1Pm4DJUp8cZ",
     );
 	let signature: TransactionSignature = "";
-        //form.voteAccount, 
+        //form.voteAccount,
         //form.discord,
-		
+
 		try {
       const transaction = new Transaction().add(
         SystemProgram.transfer({
@@ -105,14 +105,14 @@ export const MonitorValidator: FC = () => {
       signature = await sendTransaction(transaction, connection);
 	  try {
 		await connection.confirmTransaction(signature, 'max');
-		
+
 	  setIsLoading(false);
       notify({
         type: "success",
         message: "Transaction successful!",
         txid: signature,
 		});
-		
+
 		const data = new FormData();
 		data.append('transaction', signature);
 		data.append('Vote', form.voteAccount);
@@ -126,7 +126,7 @@ export const MonitorValidator: FC = () => {
         message: `Added to Monitoring server`,
         description: String(result),
       });
-		
+
 		 //window.location.replace('/');
 	} catch {
 		setIsLoading(false);
@@ -136,11 +136,11 @@ export const MonitorValidator: FC = () => {
         txid: signature,
 		});
 		}
-  
-      
+
+
     } catch (error: any) {
 		setIsLoading(false);
-		setIsHidden(true);
+		//setIsHidden(true);
       notify({
         type: "error",
         message: `Transaction failed! Please try again`,
@@ -151,21 +151,18 @@ export const MonitorValidator: FC = () => {
       return;
     }
   }, [publicKey, sendTransaction, connection]);
-  
-  
-  
-  
+
   const ValonClick = useCallback(async () => {
 	  const data = await ValData("http://127.0.0.1:8080/AllValData/");
-	  
+
 	  var valiID = [];
-		for(var i = 0;i<data.length;i++) { 
+		for(var i = 0;i<data.length;i++) {
 		    console.log(data[i]);
 			valiID = valiID + data[i]  + " "
 		allVal.value = valiID
 		}
   },[])
-	
+
   return (
   <div  className="my-5">
    {isLoading && (
@@ -174,9 +171,8 @@ export const MonitorValidator: FC = () => {
         </div>
       )}
   <h3>
-  <p>Costs 50 safe to add or 1 safe to update a validator to monitor</p>
+  <p>Costs 1 safe to add or update a validator to monitor</p>
   </h3>
- 
     <div className="my-6">
 	<p>To monitor more then 1 Validator, please place a space between each validator pubkey</p>
       <input
@@ -185,13 +181,13 @@ export const MonitorValidator: FC = () => {
         placeholder="Validator Vote Account"
         onChange={(e) => setVoteAcc(e.target.value)}
       />
-	  
+
       <input
         type="text"
         className="form-control block mb-2 w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
         placeholder="Discord web hock"
         onChange={(e) => setDiscord(e.target.value)}
-      />      
+      />
       <button
         className="px-8 group disabled:animate-none m-2 btn animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ..."
         onClick={() => onClick({voteAccount: voteAccount, discord: discord})}
@@ -200,14 +196,14 @@ export const MonitorValidator: FC = () => {
 		<div className="hidden group-disabled:block">Wallet not connected</div>
           <span className="block group-disabled:hidden">Pay and Monitor</span>
       </button>
-	  
+
 	  <button
         className="px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ..."
         onClick={() => ValonClick()}
 		>
-        <span className="block group-disabled:hidden">Show All Validator ID's</span>	  
+        <span className="block group-disabled:hidden">Show All Validator ID's</span>
       </button>
-	  
+
 	   <textarea
 	   className="form-control block mb-2 w-full px-2 py-2 font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
 	    id="allVal"

@@ -74,14 +74,14 @@ export const CreateToken: FC = () => {
                 ],
                 PROGRAM_ID,
               )
-			  
+
             )[0],
             mint: mintKeypair.publicKey,
             mintAuthority: publicKey,
             payer: publicKey,
             updateAuthority: publicKey,
           },
-		  
+
           {
             createMetadataAccountArgs: {
               data: {

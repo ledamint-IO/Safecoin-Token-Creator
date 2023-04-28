@@ -3,7 +3,10 @@ import { useConnection } from '@j0nnyboi/wallet-adapter-react';
 import { PublicKey } from '@safecoin/web3.js';
 import { Metadata } from '@leda-mint-io/lpl-token-metadata';
 import { findMetadataPda } from '@leda-mint-io/js';
-
+import { BurnToken } from './Burn';
+import { MintToken } from './Mint';
+import { FreezeToken } from './Freeze';
+import { ThawToken } from './Thaw';
 
 export const EditToken: FC = () => {
   const { connection } = useConnection();
@@ -17,15 +20,17 @@ export const EditToken: FC = () => {
       const tokenMint = form.tokenAddress;
       const metadataPDA =  await findMetadataPda(new PublicKey(tokenMint));
       console.log(metadataPDA.toBase58());
-      const metadataAccount = await connection.getAccountInfo(metadataPDA);
+      const metadataAccount = "test";
+      //const metadataAccount = await connection.getAccountInfo(metadataPDA);
       console.log(metadataAccount);
-      const [metadata, _] = await Metadata.deserialize(metadataAccount.data);
-      console.log(metadata);
-      let logoRes = await fetch(metadata.data.uri);
-      let logoJson = await logoRes.json();
-      let { image } = logoJson;
-      setTokenMetadata({ tokenMetadata, ...metadata.data });
-      setLogo(image);
+      //const [metadata, _] = await Metadata.deserialize(metadataAccount.data);
+      const metadata = "test";
+      //let logoRes = await fetch(metadata.data.uri);
+      //let logoJson = await logoRes.json();
+      //let { image } = logoJson;
+      //setTokenMetadata({ tokenMetadata, ...metadata.data });
+      setTokenMetadata({ tokenMetadata, "test":"test"});
+      //setLogo(image);
       setLoaded(true);
       setTokenAddress('')
     },
@@ -85,16 +90,29 @@ export const EditToken: FC = () => {
                     </div>
                     <div className='bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
                       <dt className='text-sm font-medium text-gray-500'>
+                        amount
+                      </dt>
+                      <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
+                        {tokenMetadata.tokenAmount}
+                      </dd>
+                    </div>
+                    <div className='bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
+                      <dt className='text-sm font-medium text-gray-500'>
                         uri
                       </dt>
                       <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
                         <a href={tokenMetadata.uri} target='_blank'>{tokenMetadata.uri}</a>
                       </dd>
                     </div>
+                    <MintToken></MintToken>
+                    <BurnToken></BurnToken>
+                    <FreezeToken></FreezeToken>
+                    <ThawToken></ThawToken>
                   </>
                 </dl>
               </div>
             </div>
+
         )}
       </div>
     </>
