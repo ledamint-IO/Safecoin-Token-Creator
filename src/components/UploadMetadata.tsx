@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import { notify } from "utils/notifications";
 import { Web3Storage } from "web3.storage";
 import { ClipLoader } from "react-spinners";
+import { useConnection, useWallet } from '@j0nnyboi/wallet-adapter-react';
 
 
 export const UploadMetadata: FC = () => {
@@ -12,7 +13,7 @@ export const UploadMetadata: FC = () => {
   const [tokenDescription, setTokenDescription] = useState("");
   const [jsonUri, setJsonUri] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const { publicKey, sendTransaction } = useWallet();
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -22,7 +23,7 @@ export const UploadMetadata: FC = () => {
 
   const uploadMetadata = async () => {
     const storage = new Web3Storage({ token: ipfsToken });
-	
+    
     setIsLoading(true);
     try {
       const imageCid = await storage.put([imageFile]);
@@ -153,10 +154,12 @@ export const UploadMetadata: FC = () => {
           </div>
           <div className="mt-4">
             <button
-              className="... btn m-2 animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195]  px-8 hover:from-pink-500 hover:to-yellow-500"
+              className="... btn  group disabled:animate-none m-2 animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195]  px-8 hover:from-pink-500 hover:to-yellow-500"
               onClick={uploadMetadata}
-			>
-              <span>Upload Metadata</span>
+              disabled={!publicKey}
+		      >
+		      <div className="hidden group-disabled:block">Wallet not connected</div>
+          <span className="block group-disabled:hidden">Upload Metadata</span>
             </button>
           </div>
         </div>

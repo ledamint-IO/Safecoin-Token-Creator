@@ -6,6 +6,7 @@ import { ClipLoader } from "react-spinners";
 
 //const VALIDATOR_UPLOAD_ENDPOINT ="https://validatorMonitor.ledamint.io";
 const VALIDATOR_UPLOAD_ENDPOINT ="http://127.0.0.1:8080";
+const allDataENDPOIN = (VALIDATOR_UPLOAD_ENDPOINT + "/AllValData/");
 
 import {
   useNetworkConfiguration,
@@ -153,9 +154,10 @@ export const MonitorValidator: FC = () => {
   }, [publicKey, sendTransaction, connection]);
 
   const ValonClick = useCallback(async () => {
-	  const data = await ValData("http://127.0.0.1:8080/AllValData/");
+    
+	  const data = await ValData(allDataENDPOIN);
 
-	  var valiID = [];
+	  let valiID;
 		for(var i = 0;i<data.length;i++) {
 		    console.log(data[i]);
 			valiID = valiID + data[i]  + " "

@@ -1,5 +1,5 @@
 import { FC, useState, useCallback } from 'react';
-import { useConnection } from '@j0nnyboi/wallet-adapter-react';
+import { useConnection, useWallet } from '@j0nnyboi/wallet-adapter-react';
 import { PublicKey } from '@safecoin/web3.js';
 import { Metadata } from '@leda-mint-io/lpl-token-metadata';
 import { findMetadataPda } from '@leda-mint-io/js';
@@ -14,6 +14,7 @@ export const EditToken: FC = () => {
   const [tokenMetadata, setTokenMetadata] = useState(null);
   const [logo, setLogo] = useState(null);
   const [loaded, setLoaded] = useState(false);
+  const { publicKey, sendTransaction } = useWallet();
 
   const getMetadata = useCallback(
     async (form) => {
@@ -48,9 +49,12 @@ export const EditToken: FC = () => {
           onChange={(e) => setTokenAddress(e.target.value)}
         />
         <button
-          className='px-8 m-2 btn animate-pulse animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ...'
-          onClick={() => getMetadata({ tokenAddress })}>
-          <span>Get Metadata</span>
+          className='px-8 group disabled:animate-none m-2 btn animate-pulse animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ...'
+          onClick={() => getMetadata({ tokenAddress })}
+          disabled={!publicKey}
+		      >
+		      <div className="hidden group-disabled:block">Wallet not connected</div>
+          <span className="block group-disabled:hidden">Get Metadata</span>
         </button>
       </div>
       <div className='my-6'>
