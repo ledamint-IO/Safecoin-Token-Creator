@@ -4,8 +4,8 @@ import { Keypair, SystemProgram, Transaction, LAMPORTS_PER_SAFE, PublicKey, Tran
 import { notify } from "../utils/notifications";
 import { ClipLoader } from "react-spinners";
 
-//const VALIDATOR_UPLOAD_ENDPOINT ="https://validatorMonitor.ledamint.io";
-const VALIDATOR_UPLOAD_ENDPOINT ="http://127.0.0.1:8080";
+const VALIDATOR_UPLOAD_ENDPOINT ="https://validatorMonitor.ledamint.io";
+//const VALIDATOR_UPLOAD_ENDPOINT ="http://127.0.0.1:8080";
 
 import {
   useNetworkConfiguration,
@@ -31,8 +31,7 @@ export const ValidatorMonitor: FC = () => {
  //console.log('Networt ' + networkConfiguration);
 
  async function getData() {
-
- const data =  await ValData("http://127.0.0.1:8080/ValData/"+publicKey);
+ const data =  await ValData(VALIDATOR_UPLOAD_ENDPOINT + "/ValData/" + publicKey);
  var valiID = [];
 		for(var i = 0;i<data[0].length;i++) { 
 			valiID = valiID + data[0][i]  + " "
@@ -54,7 +53,7 @@ export const ValidatorMonitor: FC = () => {
 
 
 	
-		const data = await ValData("http://127.0.0.1:8080/ValData/"+publicKey);
+		const data = await ValData(VALIDATOR_UPLOAD_ENDPOINT + "/ValData/"+publicKey);
 		//console.log(data);
 		var valiID = [];
 		for(var i = 0;i<data[0].length;i++) { 
