@@ -169,6 +169,7 @@ export const CreateToken: FC = () => {
               <input
                 className="rounded border px-4 py-2 text-xl font-normal text-gray-700 focus:border-blue-600 focus:outline-none"
                 onChange={(e) => setTokenUri(e.target.value)}
+                placeholder="Not working yet"
               />
             </div>
           </div>

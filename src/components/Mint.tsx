@@ -1,17 +1,43 @@
 import { FC, useState, useCallback } from 'react';
-import { useConnection } from '@j0nnyboi/wallet-adapter-react';
-import { PublicKey } from '@safecoin/web3.js';
+import { useConnection, useWallet } from '@j0nnyboi/wallet-adapter-react';
+import { PublicKey, Transaction } from '@safecoin/web3.js';
 import { Metadata } from '@leda-mint-io/lpl-token-metadata';
 import { findMetadataPda } from '@leda-mint-io/js';
 
+import { mintTo, getAssociatedTokenAddress, createMintToInstruction } from "@safecoin/safe-token";
 
 export const MintToken: FC = () => {
   const { connection } = useConnection();
   const [tokenAddress, setTokenAddress] = useState('');
   const [tokenAmount, setTokenAmount] = useState("");
+  const { publicKey, wallet, sendTransaction } = useWallet();
+  const tokenAddressPubkey = new PublicKey(tokenAddress);
+  
 
   const getMint = useCallback(
+
     async (form) => {
+      const tokenATA = await getAssociatedTokenAddress(tokenAddressPubkey, publicKey);
+   /*   const transactionSignature = await mintTo( //not finished need to sort
+        connection,
+        TokenAccountpublicKey,
+        mint,
+        publicKey,
+        publicKey,
+        amount
+    );*/
+
+
+    const createNewTokenMintTransaction = new Transaction().add(
+    createMintToInstruction(
+      tokenAddressPubkey,
+      tokenATA,
+      publicKey,
+      parseInt(tokenAmount) * Math.pow(10, form.decimals),
+    ));
+      await sendTransaction(createNewTokenMintTransaction, connection);
+
+
 
     },
     [tokenAddress]

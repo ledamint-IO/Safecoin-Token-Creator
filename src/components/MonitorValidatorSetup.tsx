@@ -18,6 +18,7 @@ interface IValidatorResult {
   messages?: Array<{
     transactionId: string;
     Discord: string;
+    Email:string;
     Vote: string;
 	Chain: string;
   }>;
@@ -62,6 +63,7 @@ export const MonitorValidator: FC = () => {
   const { publicKey, sendTransaction } = useWallet();
   const [voteAccount, setVoteAcc] = useState('')
   const [discord, setDiscord] = useState('')
+  const [email, setEmail] = useState('empty')
   const [isLoading, setIsLoading] = useState(false);
  const { networkConfiguration } = useNetworkConfiguration();
  //console.log('Networt ' + networkConfiguration);
@@ -118,6 +120,7 @@ export const MonitorValidator: FC = () => {
 		data.append('transaction', signature);
 		data.append('Vote', form.voteAccount);
 		data.append('Discord', form.discord);
+    data.append('email', form.email);
 		data.append('Chain', networkConfiguration);
 		data.append('publicKey', publicKey.toString());
 
@@ -153,7 +156,7 @@ export const MonitorValidator: FC = () => {
     }
   }, [publicKey, sendTransaction, connection]);
 
-  const ValonClick = useCallback(async () => {
+  async function getData() {
     
 	  const data = await ValData(allDataENDPOIN);
 
@@ -163,7 +166,8 @@ export const MonitorValidator: FC = () => {
 			valiID = valiID + data[i]  + " "
 		allVal.value = valiID
 		}
-  },[])
+  }
+  getData();
 
   return (
   <div  className="my-5">
@@ -190,6 +194,13 @@ export const MonitorValidator: FC = () => {
         placeholder="Discord web hock"
         onChange={(e) => setDiscord(e.target.value)}
       />
+      or
+      <input
+        type="text"
+        className="form-control block mb-2 w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+        placeholder="Email Not yet in use"
+        onChange={(e) => setEmail(e.target.value)}
+      />
       <button
         className="px-8 group disabled:animate-none m-2 btn animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ..."
         onClick={() => onClick({voteAccount: voteAccount, discord: discord})}
@@ -197,13 +208,6 @@ export const MonitorValidator: FC = () => {
 		>
 		<div className="hidden group-disabled:block">Wallet not connected</div>
           <span className="block group-disabled:hidden">Pay and Monitor</span>
-      </button>
-
-	  <button
-        className="px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ..."
-        onClick={() => ValonClick()}
-		>
-        <span className="block group-disabled:hidden">Show All Validator ID's</span>
       </button>
 
 	   <textarea

@@ -29,11 +29,31 @@ export const ValidatorMonitor: FC = () => {
   const [isLoading, setIsLoading] = useState(false);
  const { networkConfiguration } = useNetworkConfiguration();
  //console.log('Networt ' + networkConfiguration);
- 
-  
+
+ async function getData() {
+
+ const data =  await ValData("http://127.0.0.1:8080/ValData/"+publicKey);
+ var valiID = [];
+		for(var i = 0;i<data[0].length;i++) { 
+			valiID = valiID + data[0][i]  + " "
+		Valid.value = valiID
+		//console.log(valiID) 
+		}
+		var allValID = [];
+		for(var i = 0;i<data[1].length;i++) { 
+			allValID = allValID + data[1][i] + " "
+		allValid.value = allValID
+		//console.log(allValID) 
+		}
+	}
+	getData();
+
   const onClick = useCallback(async () => {
 
+	
 
+
+	
 		const data = await ValData("http://127.0.0.1:8080/ValData/"+publicKey);
 		//console.log(data);
 		var valiID = [];
@@ -48,7 +68,7 @@ export const ValidatorMonitor: FC = () => {
 		allValid.value = allValID
 		//console.log(allValID) 
 		}
-		
+	
 
   }, [publicKey, sendTransaction, connection]);
 	
