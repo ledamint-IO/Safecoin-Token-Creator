@@ -11,7 +11,7 @@ export const MintToken: FC = () => {
   const [tokenAddress, setTokenAddress] = useState('');
   const [tokenAmount, setTokenAmount] = useState("");
   const { publicKey, wallet, sendTransaction } = useWallet();
-  const tokenAddressPubkey = new PublicKey(tokenAddress);
+  const tokenAddressPubkey = "";
   
 
   const getMint = useCallback(

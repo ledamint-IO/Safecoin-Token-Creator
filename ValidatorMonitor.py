@@ -10,15 +10,15 @@ import sqlite3
 import threading
 import requests
 from time import gmtime, strftime,sleep
-from discord import Webhook, RequestsWebhookAdapter
+from discord import SyncWebhook
 from safecoin.keypair import Keypair
 from safecoin.rpc.api import Client
 from safecoin.rpc.types import MemcmpOpts
 from safecoin.publickey import PublicKey
 
-
+ValidatorURL = 'C:\\Users\\Administrator\\Documents\\GitHub\\Safecoin-Token-Creator\\ValidatorDB.db'
   
-cursor = sqlite3.connect('ValidatorDB.db')
+cursor = sqlite3.connect(ValidatorURL)
 
 api_endpoints={"mainnet":"https://api.mainnet-beta.safecoin.org",
                "devnet":"https://api.devnet.safecoin.org",
@@ -29,7 +29,7 @@ ValidatorCheckTime = 5 #time in minutes between checking for you validator is of
 def DiscordSend(StringToSend,Discord_Web_Hock):
     try:
         print(StringToSend)
-        webhook = Webhook.from_url(Discord_Web_Hock, adapter=RequestsWebhookAdapter())
+        webhook = SyncWebhook.from_url(Discord_Web_Hock)
         webhook.send(StringToSend)
         return True
     except:
@@ -37,39 +37,39 @@ def DiscordSend(StringToSend,Discord_Web_Hock):
 
     
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
-    global UpdateDB    
     def do_GET(self):
         if('AllValData' in self.path):
             #endpint = api_endpoints[row[5]]
             endpint = api_endpoints['mainnet']
             print(endpint)
-            allValIDs = []
+            currentallValIDs = []
+            delinquetallValIDs = []
             client = Client(endpint)
             if(client.is_connected() == True):
-                    allValIDs.append("Vote-Identity\n")
-                    allValIDs.append("Online\n")
                     validatorList = (client.get_vote_accounts()['result']['current'])
                     #print(validatorList)
                     for vals in validatorList:
                         nodePubkey = vals['nodePubkey']
                         votePubkey = vals['votePubkey']
-                        print(nodePubkey,votePubkey)
-                        allValIDs.append(nodePubkey + "-" + votePubkey)
-                    allValIDs.append("\n\r delinquent\n")
+                        #print(nodePubkey,votePubkey)
+                        currentallValIDs.append(nodePubkey + "-" + votePubkey)
                     validatorList = (client.get_vote_accounts()['result']['delinquent'])
                     #print(validatorList)
                     for vals in validatorList:
                         nodePubkey = vals['nodePubkey']
                         votePubkey = vals['votePubkey']
-                        print(nodePubkey,votePubkey)
-                        allValIDs.append(nodePubkey + "-" + votePubkey)
-                            
+                        #print(nodePubkey,votePubkey)
+                        delinquetallValIDs.append(nodePubkey + "-" + votePubkey)
 
 
-
-
-
+                    
+                    
+            currentallValIDs.sort()
+            delinquetallValIDs.sort()
+            allValIDs = ["Vote-Identity\n"] 
+            allValIDs.append("Online\n %s \n\r delinquent\n %s"% (currentallValIDs,delinquetallValIDs))
             
+            #print(allValIDs)
             self.send_response(200)
             self.send_header('Access-Control-Allow-Origin', '*')
             self.send_header('Content-type', 'application/json')
@@ -83,7 +83,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         elif('ValData' in self.path):
             PubKey = self.path.split("/")[2]
             print(PubKey)
-            cursor = sqlite3.connect('ValidatorDB.db')
+            cursor = sqlite3.connect(ValidatorURL)
             cur = cursor.cursor()
             cur.execute("SELECT * FROM ValidatorPayment")
 
@@ -118,6 +118,8 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                             self.send_header('Access-Control-Allow-Origin', '*')
                             self.send_header('Content-type', 'application/json')
                             self.end_headers()
+                            myDelqVal.sort()
+                            allDelqVal.sort()
                             self.wfile.write(json.dumps((myDelqVal,allDelqVal)).encode())
                             return
                             
@@ -141,6 +143,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         #try:
+            global UpdateDB
             form = cgi.FieldStorage(
                     fp=self.rfile,
                     headers=self.headers,
@@ -169,7 +172,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                 return
             
 
-            cursor = sqlite3.connect('ValidatorDB.db')
+            cursor = sqlite3.connect(ValidatorURL)
             cursor.execute("""CREATE TABLE IF NOT EXISTS ValidatorPayment
                 (pubkey TEXT PRIMARY KEY,tx TEXT,Vote TEXT,EmailAdd TEXT,Discord TEXT,Chain TEXT);""")
             try:
@@ -194,6 +197,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
 
 def StarthttpServer():
+    global UpdateDB
     httpd = HTTPServer(('127.0.0.1', 8080), SimpleHTTPRequestHandler)
     #httpd = HTTPServer(('185.213.27.58', 80), SimpleHTTPRequestHandler)
     httpd.serve_forever()
@@ -220,8 +224,6 @@ Counter = 99
 AlarmSent = False
 UpdateDB = True
 while True:
-
-                   
         sleep(10)
         Min = strftime("%M", gmtime())
         hour = strftime("%H", gmtime())
@@ -230,6 +232,7 @@ while True:
                 hourpre = hour
                 AlarmSent = False
                 UpdateDB = True
+                AlarmLST = ['jonnyboi-jonnyboi-jonnyboi']
                 """
                 day = strftime("%d", gmtime())
                 if(day != Daypre):
@@ -246,16 +249,15 @@ while True:
                     else:
                         client = Client(api_endpoint)
         """
-
         if(UpdateDB == True):
-            cursor = sqlite3.connect('ValidatorDB.db')
+            cursor = sqlite3.connect(ValidatorURL)
             cur = cursor.cursor()
             cur.execute("SELECT * FROM ValidatorPayment")
             rows = cur.fetchall()
             cursor.close()
-            AlarmLST = ['jonnyboi-jonnyboi-jonnyboi']
             UpdateDB = False
-            
+            print("DB updated")
+        
         if(Min != Minpre):
                 Minpre = Min
                 Counter += 1

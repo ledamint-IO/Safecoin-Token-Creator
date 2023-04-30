@@ -63,7 +63,7 @@ export const CreateToken: FC = () => {
           TOKEN_PROGRAM_ID,
         ),
 
-        createCreateMetadataAccountInstruction(
+        /*createCreateMetadataAccountInstruction(
           {
             metadata: (
               await PublicKey.findProgramAddress(
@@ -94,7 +94,7 @@ export const CreateToken: FC = () => {
               isMutable: false,
             },
           },
-        ),
+        ),*/
       );
       const signature = await sendTransaction(tx, connection, {
         signers: [mintKeypair],
