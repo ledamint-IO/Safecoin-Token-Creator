@@ -37,7 +37,7 @@ def DiscordSend(StringToSend,Discord_Web_Hock):
 
     
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
-        
+    global UpdateDB    
     def do_GET(self):
         if('AllValData' in self.path):
             #endpint = api_endpoints[row[5]]
@@ -189,6 +189,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             self.send_header('Content-type', 'application/json')
             self.end_headers()
             self.wfile.write(json.dumps('ok').encode())
+            UpdateDB = True
             
 
 
@@ -217,7 +218,10 @@ Daypre = 0
 hourpre = 99
 Counter = 99
 AlarmSent = False
+UpdateDB = True
 while True:
+
+                   
         sleep(10)
         Min = strftime("%M", gmtime())
         hour = strftime("%H", gmtime())
@@ -225,12 +229,7 @@ while True:
         if(hour != hourpre):
                 hourpre = hour
                 AlarmSent = False
-                cursor = sqlite3.connect('ValidatorDB.db')
-                cur = cursor.cursor()
-                cur.execute("SELECT * FROM ValidatorPayment")
-                rows = cur.fetchall()
-                cursor.close()
-                AlarmLST = ['jonnyboi-jonnyboi-jonnyboi']
+                UpdateDB = True
                 """
                 day = strftime("%d", gmtime())
                 if(day != Daypre):
@@ -246,7 +245,17 @@ while True:
                             DiscordSend("Running out of safe, you only have %s left to vote with, please add some to address %s" % (IDBalance,ValidatorID))
                     else:
                         client = Client(api_endpoint)
-        """        
+        """
+
+        if(UpdateDB == True):
+            cursor = sqlite3.connect('ValidatorDB.db')
+            cur = cursor.cursor()
+            cur.execute("SELECT * FROM ValidatorPayment")
+            rows = cur.fetchall()
+            cursor.close()
+            AlarmLST = ['jonnyboi-jonnyboi-jonnyboi']
+            UpdateDB = False
+            
         if(Min != Minpre):
                 Minpre = Min
                 Counter += 1

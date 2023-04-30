@@ -41,7 +41,6 @@ const uploadToValidator = async (data: FormData): Promise<IValidatorResult> => {
   const result: IValidatorResult = await resp.json();
 
   if (result.error) {
-	console.log('Results Error');
     return Promise.reject(new Error(result.error));
   }
 
