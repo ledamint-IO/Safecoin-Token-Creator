@@ -50,10 +50,11 @@ export const EditToken: FC = () => {
       //setTokenAddress('')
 
       const tokenAddress = (document.getElementById("Token_Address") as HTMLInputElement).value;
+	  console.log(tokenAddress);
       const tokenATA = await getAssociatedTokenAddress(new PublicKey(tokenAddress), publicKey);
-      getTKBallance(tokenATA);
-      //console.log(tokenAddress)
-      //console.log(tokenATA);
+	  
+      console.log(tokenATA);
+	  getTKBallance(tokenATA);
     },
     []
   );
