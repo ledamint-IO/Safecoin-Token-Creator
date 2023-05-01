@@ -1,13 +1,16 @@
 import { useConnection, useWallet } from "@j0nnyboi/wallet-adapter-react";
 import { LAMPORTS_PER_SAFE, TransactionSignature } from "@safecoin/web3.js";
-import { FC, useCallback } from "react";
+import { FC, useCallback, useState} from "react";
 import { notify } from "../utils/notifications";
 import useUserSOLBalanceStore from "../stores/useUserSOLBalanceStore";
+
+import { ClipLoader } from "react-spinners";
 
 export const RequestAirdrop: FC = () => {
   const { connection } = useConnection();
   const { publicKey } = useWallet();
   const { getUserSOLBalance } = useUserSOLBalanceStore();
+  const [isLoading, setIsLoading] = useState(false);
 
   const onClick = useCallback(async () => {
     if (!publicKey) {
@@ -19,11 +22,13 @@ export const RequestAirdrop: FC = () => {
       });
       return;
     }
-
+    setIsLoading(true);
     let signature: TransactionSignature = "";
 
     try {
       signature = await connection.requestAirdrop(publicKey, LAMPORTS_PER_SAFE * 10);
+      await  connection.confirmTransaction(signature);
+      setIsLoading(false);
       notify({
         type: "success",
         message: "Airdrop successful!",
@@ -39,6 +44,7 @@ export const RequestAirdrop: FC = () => {
 
       getUserSOLBalance(publicKey, connection);
     } catch (error: any) {
+      setIsLoading(false);
       notify({
         type: "error",
         message: `Airdrop failed!`,
@@ -50,6 +56,12 @@ export const RequestAirdrop: FC = () => {
   }, [publicKey, connection, getUserSOLBalance]);
 
   return (
+    <div>
+     {isLoading && (
+        <div className="absolute top-0 left-0 z-50 flex h-screen w-full items-center justify-center bg-black/[.3] backdrop-blur-[10px]">
+          <ClipLoader />
+        </div>
+      )}
     <div className="mt-4">
       <div className="p-2">
         <div className="text-xl font-normal">Request airdrop</div>
@@ -62,6 +74,7 @@ export const RequestAirdrop: FC = () => {
         <div className="hidden group-disabled:block">Wallet not connected</div>
         <span className="block group-disabled:hidden">Airdrop 10 Safe</span>
       </button>
+    </div>
     </div>
   );
 };

@@ -10,6 +10,9 @@ import {
   TOKEN_PROGRAM_ID,
   createInitializeMintInstruction,
   getMinimumBalanceForRentExemptMint,
+  createAssociatedTokenAccountInstruction,
+  getAssociatedTokenAddress,
+  createMintToCheckedInstruction,
 } from "@safecoin/safe-token";
 import {
   createCreateMetadataAccountInstruction,
@@ -44,6 +47,8 @@ export const CreateToken: FC = () => {
 	//console.log(TOKEN_PROGRAM_ID.toString());
     const lamports = await getMinimumBalanceForRentExemptMint(connection);
     const mintKeypair = Keypair.generate();
+    const tokenATA = await getAssociatedTokenAddress(new PublicKey(mintKeypair.publicKey), publicKey);
+    const TKAmount = (document.getElementById("TKAMT") as HTMLInputElement).value;
     setIsLoading(true);
     try {
       const tx = new Transaction().add(
@@ -62,49 +67,33 @@ export const CreateToken: FC = () => {
           publicKey,
           TOKEN_PROGRAM_ID,
         ),
+      createAssociatedTokenAccountInstruction(
+        publicKey, // payer
+        tokenATA, // ata
+        publicKey, // owner
+        mintKeypair.publicKey // mint
+      ),
 
-        /*createCreateMetadataAccountInstruction(
-          {
-            metadata: (
-              await PublicKey.findProgramAddress(
-                [
-                  Buffer.from("metadata"),
-                  PROGRAM_ID.toBuffer(),
-                  mintKeypair.publicKey.toBuffer(),
-                ],
-                PROGRAM_ID,
-              )
+      createMintToCheckedInstruction(
+        mintKeypair.publicKey,
+        tokenATA,
+        publicKey,
+        parseInt(TKAmount)* Math.pow(10, 9),
+        9
+      ),
 
-            )[0],
-            mint: mintKeypair.publicKey,
-            mintAuthority: publicKey,
-            payer: publicKey,
-            updateAuthority: publicKey,
-          },
-
-          {
-            createMetadataAccountArgs: {
-              data: {
-                name: tokenName,
-                symbol: tokenSymbol,
-                uri: tokenUri,
-                creators: null,
-                sellerFeeBasisPoints: 0,
-              },
-              isMutable: false,
-            },
-          },
-        ),*/
       );
       const signature = await sendTransaction(tx, connection, {
         signers: [mintKeypair],
       });
+      await  connection.confirmTransaction(signature);
       setTokenMintAddress(mintKeypair.publicKey.toString());
       notify({
         type: "success",
         message: "Token creation successful",
         txid: signature,
       });
+
     } catch (error: any) {
       notify({ type: "error", message: "Token creation failed" });
     }
@@ -170,6 +159,18 @@ export const CreateToken: FC = () => {
                 className="rounded border px-4 py-2 text-xl font-normal text-gray-700 focus:border-blue-600 focus:outline-none"
                 onChange={(e) => setTokenUri(e.target.value)}
                 placeholder="Not working yet"
+              />
+            </div>
+          </div>
+          <div className="mt-4 sm:grid sm:grid-cols-2 sm:gap-4">
+            <div className="m-auto p-2">
+              <div className="text-xl font-normal">Token Mint Amount</div>
+            </div>
+            <div className="m-auto p-2">
+              <input
+                className="rounded border px-4 py-2 text-xl font-normal text-gray-700 focus:border-blue-600 focus:outline-none" id="TKAMT"
+                type={"number"}
+                min={0}
               />
             </div>
           </div>

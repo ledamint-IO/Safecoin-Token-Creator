@@ -12,23 +12,27 @@ import { ClipLoader } from "react-spinners";
 export const EditToken: FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { connection } = useConnection();
-  const [tokenAddress, setTokenAddress] = useState('');
   const [tokenMetadata, setTokenMetadata] = useState(null);
   const [logo, setLogo] = useState(null);
   const [loaded, setLoaded] = useState(false);
   const { publicKey, sendTransaction } = useWallet();
-  const [tokenAccount, setTokenAccount] = useState("");
 
 
   async function getTKBallance(tokenATA) {
+    try{
     let accountDetails = await connection.getTokenAccountBalance(new PublicKey(tokenATA));
     console.log(accountDetails.value.uiAmount);
     document.getElementById("TKnumber").innerHTML = accountDetails.value.uiAmount.toString();
+    }catch  (error: any) {
+      console.log(0);
+      document.getElementById("TKnumber").innerHTML = "0";
+    }
    };
 
+
   const getMetadata = useCallback(
-    async (form) => {
-      console.log(form.tokenAddress)
+    async () => {
+
       //console.log(TKaddress.toString());
       //const metadataPDA =  await findMetadataPda(new PublicKey(form.TKaddress));
       //console.log(metadataPDA.toBase58());
@@ -45,11 +49,10 @@ export const EditToken: FC = () => {
       setLoaded(true);
       //setTokenAddress('')
 
-      const tokenATA = await getAssociatedTokenAddress(new PublicKey(form.tokenAddress), publicKey);
-      setTokenAccount(tokenATA.toString());
-      setTokenAddress(form.tokenAddress);
-      getTKBallance(tokenATA);
-      console.log(tokenAccount);
+      //const tokenAddress = (document.getElementById("Token_Address") as HTMLInputElement).value;
+      //const tokenATA = await getAssociatedTokenAddress(new PublicKey(tokenAddress), publicKey);
+      //console.log(tokenAddress)
+      //console.log(tokenATA);
     },
     []
   );
@@ -59,14 +62,16 @@ export const EditToken: FC = () => {
 
     async () => {
       const TKAmount = (document.getElementById("TKAMT") as HTMLInputElement).value;
-      console.log(tokenAddress);
+      const tokenAddress = (document.getElementById("Token_Address") as HTMLInputElement).value;
+      const tokenATA = await getAssociatedTokenAddress(new PublicKey(tokenAddress), publicKey);
+
     try {
       const mint = new PublicKey(tokenAddress);
       let tx = new Transaction().add(
 
       createMintToCheckedInstruction(
       mint,
-      new PublicKey(tokenAccount),
+      new PublicKey(tokenATA),
       publicKey,
       parseInt(TKAmount)* Math.pow(10, 9),
       9
@@ -75,7 +80,7 @@ export const EditToken: FC = () => {
       const signature = await sendTransaction(tx, connection);
 
      await  connection.confirmTransaction(signature);
-     getTKBallance(tokenAccount);
+     getTKBallance(tokenATA);
      setIsLoading(false);
       notify({
         type: "success",
@@ -95,10 +100,13 @@ export const EditToken: FC = () => {
   const getFreeze = useCallback(
     async () => {
   try{
-    console.log(tokenAccount);
+
+    const tokenAddress = (document.getElementById("Token_Address") as HTMLInputElement).value;
+      const tokenATA = await getAssociatedTokenAddress(new PublicKey(tokenAddress), publicKey);
+      console.log(tokenAddress);
       let transaction: Transaction = new Transaction().add(
         createFreezeAccountInstruction(
-          new PublicKey(tokenAccount),
+          new PublicKey(tokenATA),
           new PublicKey(tokenAddress),
           publicKey));
       setIsLoading(true);
@@ -121,10 +129,12 @@ export const EditToken: FC = () => {
   const getThaw = useCallback(
     async () => {
       try{
-        console.log(tokenAccount);
+        const tokenAddress = (document.getElementById("Token_Address") as HTMLInputElement).value;
+      const tokenATA = await getAssociatedTokenAddress(new PublicKey(tokenAddress), publicKey);
+        console.log(tokenATA);
         let transaction: Transaction = new Transaction().add(
         createThawAccountInstruction(
-          new PublicKey(tokenAccount),
+          new PublicKey(tokenATA),
           new PublicKey(tokenAddress),
           publicKey
         ));
@@ -151,12 +161,14 @@ export const EditToken: FC = () => {
     async () => {
     try{
       const BurnAmount = (document.getElementById("BURNAMT") as HTMLInputElement).value;
-      console.log(tokenAccount);
+      const tokenAddress = (document.getElementById("Token_Address") as HTMLInputElement).value;
+      const tokenATA = await getAssociatedTokenAddress(new PublicKey(tokenAddress), publicKey);
+      console.log(tokenATA);
       console.log(tokenAddress);
       setIsLoading(true);
       let transaction: Transaction = new Transaction().add(
       createBurnCheckedInstruction(
-        new PublicKey(tokenAccount), // PublicKey of Owner's Associated Token Account
+        new PublicKey(tokenATA), // PublicKey of Owner's Associated Token Account
         new PublicKey(tokenAddress), // Public Key of the Token Mint Address
         publicKey, // Public Key of Owner's Wallet
         parseInt(BurnAmount) * (10**9), // Number of tokens to burn
@@ -164,7 +176,7 @@ export const EditToken: FC = () => {
       ));
       const signature = await sendTransaction(transaction, connection);
       await  connection.confirmTransaction(signature);
-      getTKBallance(tokenAccount);
+      getTKBallance(tokenATA);
       setIsLoading(false);
       notify({
         type: "success",
@@ -184,7 +196,7 @@ export const EditToken: FC = () => {
   return (
     <>
     <div>
-     {isLoading && (
+      {isLoading && (
         <div className="absolute top-0 left-0 z-50 flex h-screen w-full items-center justify-center bg-black/[.3] backdrop-blur-[10px]">
           <ClipLoader />
         </div>
@@ -192,14 +204,13 @@ export const EditToken: FC = () => {
       <div className='my-6'>
         <input
           type='text'
-          value={tokenAddress}
           className='form-control block mb-2 ml-auto mr-auto max-w-800 px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none'
           placeholder='Token Address'
-          onChange={(e) => setTokenAddress(e.target.value)}
+          id="Token_Address"
         />
         <button
           className='px-8 group disabled:animate-none m-2 btn animate-pulse animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ...'
-          onClick={() => getMetadata({tokenAddress})}
+          onClick={() => getMetadata()}
           disabled={!publicKey}
 		      >
 		      <div className="hidden group-disabled:block">Wallet not connected</div>
