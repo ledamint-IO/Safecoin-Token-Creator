@@ -10,7 +10,7 @@ const VALIDATOR_UPLOAD_ENDPOINT ="https://onestopshopBridge.ledamint.io";
 import {
   useNetworkConfiguration,
 } from "../contexts/NetworkConfigurationProvider";
- 
+
 
 export async function ValData(
   request: RequestInfo
@@ -33,48 +33,48 @@ export const ValidatorMonitor: FC = () => {
  async function getData() {
  const data =  await ValData(VALIDATOR_UPLOAD_ENDPOINT + "/ValData/" + publicKey);
  var valiID = [];
-		for(var i = 0;i<data[0].length;i++) { 
+		for(var i = 0;i<data[0].length;i++) {
 			valiID = valiID + data[0][i]  + " "
 		Valid.value = valiID
-		//console.log(valiID) 
+		//console.log(valiID)
 		}
 		var allValID = [];
-		for(var i = 0;i<data[1].length;i++) { 
+		for(var i = 0;i<data[1].length;i++) {
 			allValID = allValID + data[1][i] + " "
 		allValid.value = allValID
-		//console.log(allValID) 
+		//console.log(allValID)
 		}
 	}
 	getData();
 
   const onClick = useCallback(async () => {
 
-	
 
 
-	
+
+
 		const data = await ValData(VALIDATOR_UPLOAD_ENDPOINT + "/ValData/"+publicKey);
 		//console.log(data);
 		var valiID = [];
-		for(var i = 0;i<data[0].length;i++) { 
+		for(var i = 0;i<data[0].length;i++) {
 			valiID = valiID + data[0][i]  + " "
 		Valid.value = valiID
-		//console.log(valiID) 
+		//console.log(valiID)
 		}
 		var allValID = [];
-		for(var i = 0;i<data[1].length;i++) { 
+		for(var i = 0;i<data[1].length;i++) {
 			allValID = allValID + data[1][i] + " "
 		allValid.value = allValID
-		//console.log(allValID) 
+		//console.log(allValID)
 		}
-	
+
 
   }, [publicKey, sendTransaction, connection]);
-	
+
   return (
-  <div  className="my-5">   
-  
- 
+  <div  className="my-5">
+
+
 	  <p>My Montoring Validators that are Delinquent</p>
 	  <textarea
 	   className="form-control block mb-2 w-full px-2 py-2 font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
