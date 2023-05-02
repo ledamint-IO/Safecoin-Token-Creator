@@ -151,7 +151,7 @@ export const MonitorValidator: FC = () => {
         console.log('Added to Monitoring server');
         notify({
             type: "success",
-            message: `Added to Monitoring server, Please leave upto 1 hour to populate`,
+            message: `Added to Monitoring server`,
             description: String(result),
           });
 
