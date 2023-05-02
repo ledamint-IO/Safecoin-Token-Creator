@@ -4,8 +4,8 @@ import { Keypair, SystemProgram, Transaction, LAMPORTS_PER_SAFE, PublicKey, Tran
 import { notify } from "../utils/notifications";
 import { ClipLoader } from "react-spinners";
 
-const VALIDATOR_UPLOAD_ENDPOINT ="https://onestopshopBridge.ledamint.io";
-//const VALIDATOR_UPLOAD_ENDPOINT ="http://127.0.0.1:8080";
+//const VALIDATOR_UPLOAD_ENDPOINT ="https://onestopshopBridge.ledamint.io";
+const VALIDATOR_UPLOAD_ENDPOINT ="http://127.0.0.1:8080";
 
 import {
   useNetworkConfiguration,
@@ -32,44 +32,37 @@ export const ValidatorMonitor: FC = () => {
 
  async function getData() {
  const data =  await ValData(VALIDATOR_UPLOAD_ENDPOINT + "/ValData/" + publicKey);
+ //console.log(data);
  var valiID = [];
-		for(var i = 0;i<data[0].length;i++) {
-			valiID = valiID + data[0][i]  + " "
-		Valid.value = valiID
-		//console.log(valiID)
-		}
-		var allValID = [];
-		for(var i = 0;i<data[1].length;i++) {
-			allValID = allValID + data[1][i] + " "
-		allValid.value = allValID
-		//console.log(allValID)
-		}
+ for(var i = 0;i<data[0].length;i++) {
+   valiID = valiID + data[0][i]
+   document.getElementById("Valid").innerHTML = valiID.toString();
+ //console.log(valiID)
+ }
+ var allValID = [];
+ for(var i = 0;i<data[1].length;i++) {
+   allValID = allValID + data[1][i]
+ document.getElementById("allValid").innerHTML = allValID.toString();
+ //console.log(allValID)
+ }
+
+ var myValID = [];
+ for(var i = 0;i<data[2].length;i++) {
+   myValID = myValID + data[2][i]
+   document.getElementById("MyValid").innerHTML = myValID.toString();
+ //console.log(myValID)
+ }
+
 	}
 	getData();
 
+
   const onClick = useCallback(async () => {
+    getData();
 
 
 
-
-
-		const data = await ValData(VALIDATOR_UPLOAD_ENDPOINT + "/ValData/"+publicKey);
-		//console.log(data);
-		var valiID = [];
-		for(var i = 0;i<data[0].length;i++) {
-			valiID = valiID + data[0][i]  + " "
-		Valid.value = valiID
-		//console.log(valiID)
-		}
-		var allValID = [];
-		for(var i = 0;i<data[1].length;i++) {
-			allValID = allValID + data[1][i] + " "
-		allValid.value = allValID
-		//console.log(allValID)
-		}
-
-
-  }, [publicKey, sendTransaction, connection]);
+  }, []);
 
   return (
   <div  className="my-5">
@@ -80,18 +73,24 @@ export const ValidatorMonitor: FC = () => {
 	   className="form-control block mb-2 w-full px-2 py-2 font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
         id="Valid"
         placeholder=""
-		value=""
         rows={2}
-		cols="115"
+		    cols={115}
+      />
+      <p>My Validators that i am monitoring</p>
+	  <textarea
+	   className="form-control block mb-2 w-full px-2 py-2 font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+        id="MyValid"
+        placeholder=""
+        rows={2}
+		    cols={115}
       />
 	  <p>All delinquent Validators</p>
 	   <textarea
 	   className="form-control block mb-2 w-full px-2 py-2 font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-	   id="allValid"
+	      id="allValid"
         placeholder=""
-		value=""
         rows={20}
-		cols="115"
+		    cols={115}
       />
 
 	  <button

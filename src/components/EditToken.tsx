@@ -52,7 +52,7 @@ export const EditToken: FC = () => {
       const tokenAddress = (document.getElementById("Token_Address") as HTMLInputElement).value;
 	  console.log(tokenAddress);
       const tokenATA = await getAssociatedTokenAddress(new PublicKey(tokenAddress), publicKey);
-	  
+
       console.log(tokenATA);
 	  getTKBallance(tokenATA);
     },
@@ -81,7 +81,12 @@ export const EditToken: FC = () => {
     setIsLoading(true);
       const signature = await sendTransaction(tx, connection);
 
-     await  connection.confirmTransaction(signature);
+      const latestBlockHash = await connection.getLatestBlockhash();
+      await connection.confirmTransaction({
+        blockhash: latestBlockHash.blockhash,
+        lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+        signature: signature,
+      });
      getTKBallance(tokenATA);
      setIsLoading(false);
       notify({
@@ -113,7 +118,12 @@ export const EditToken: FC = () => {
           publicKey));
       setIsLoading(true);
       const signature = await sendTransaction(transaction,connection);
-      await  connection.confirmTransaction(signature);
+      const latestBlockHash = await connection.getLatestBlockhash();
+		    await connection.confirmTransaction({
+          blockhash: latestBlockHash.blockhash,
+          lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+          signature: signature,
+        });
       setIsLoading(false);
       notify({
         type: "success",
@@ -142,7 +152,12 @@ export const EditToken: FC = () => {
         ));
         setIsLoading(true);
         const signature = await sendTransaction(transaction,connection);
-        await  connection.confirmTransaction(signature);
+        const latestBlockHash = await connection.getLatestBlockhash();
+		    await connection.confirmTransaction({
+          blockhash: latestBlockHash.blockhash,
+          lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+          signature: signature,
+        });
         setIsLoading(false);
         notify({
           type: "success",
@@ -177,7 +192,12 @@ export const EditToken: FC = () => {
         9 // Number of Decimals of the Token Mint
       ));
       const signature = await sendTransaction(transaction, connection);
-      await  connection.confirmTransaction(signature);
+      const latestBlockHash = await connection.getLatestBlockhash();
+		    await connection.confirmTransaction({
+          blockhash: latestBlockHash.blockhash,
+          lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+          signature: signature,
+        });
       getTKBallance(tokenATA);
       setIsLoading(false);
       notify({

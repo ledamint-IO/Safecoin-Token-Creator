@@ -9,11 +9,12 @@ import {
 } from "@safecoin/web3.js";
 import { FC, useCallback, useState } from "react";
 import { notify } from "../utils/notifications";
+import { ClipLoader } from "react-spinners";
 
 export const SendTransaction: FC = () => {
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
-
+  const [isLoading, setIsLoading] = useState(false);
   const [amount, setAmount] = useState("0.0");
 
   const solInputValidation = async (e) => {
@@ -44,13 +45,21 @@ export const SendTransaction: FC = () => {
       );
 
       signature = await sendTransaction(transaction, connection);
-
+      setIsLoading(true);
+      const latestBlockHash = await connection.getLatestBlockhash();
+      await connection.confirmTransaction({
+        blockhash: latestBlockHash.blockhash,
+        lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+        signature: signature,
+      });
+      setIsLoading(false);
       notify({
         type: "success",
-        message: "Transaction successful!",
+        message: "Transaction successful! Thankyou for your support",
         txid: signature,
       });
     } catch (error: any) {
+      setIsLoading(false);
       notify({
         type: "error",
         message: `Transaction failed!`,
@@ -63,6 +72,12 @@ export const SendTransaction: FC = () => {
   }, [publicKey, amount, sendTransaction, connection]);
 
   return (
+    <div>
+      {isLoading && (
+        <div className="absolute top-0 left-0 z-50 flex h-screen w-full items-center justify-center bg-black/[.3] backdrop-blur-[10px]">
+          <ClipLoader />
+        </div>
+      )}
     <div className="mt-4">
       <div className="p-2">
         <div className="text-xl font-normal">Send some SAFE to the creator</div>
@@ -83,6 +98,7 @@ export const SendTransaction: FC = () => {
         <div className="hidden group-disabled:block ">Wallet not connected</div>
         <span className="block group-disabled:hidden">Send Transaction</span>
       </button>
+    </div>
     </div>
   );
 };

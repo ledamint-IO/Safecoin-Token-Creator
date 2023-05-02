@@ -15,9 +15,12 @@ import {
   createMintToCheckedInstruction,
 } from "@safecoin/safe-token";
 import {
-  createCreateMetadataAccountInstruction,
+  createCreateMetadataAccountV2Instruction,
+  DataV2,
   PROGRAM_ID,
 } from "@leda-mint-io/lpl-token-metadata";
+
+import { findMetadataPda } from '@leda-mint-io/js';
 
 
 import { FC, useCallback, useState } from "react";
@@ -25,15 +28,13 @@ import { notify } from "utils/notifications";
 import { ClipLoader } from "react-spinners";
 import { useNetworkConfiguration } from "contexts/NetworkConfigurationProvider";
 
+
+
+
 export const CreateToken: FC = () => {
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
   const { networkConfiguration } = useNetworkConfiguration();
-
-  const [tokenName, setTokenName] = useState("");
-  const [tokenSymbol, setTokenSymbol] = useState("");
-  const [tokenUri, setTokenUri] = useState("");
-  const [tokenDecimals, setTokenDecimals] = useState("9");
   const [tokenMintAddress, setTokenMintAddress] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -42,13 +43,36 @@ export const CreateToken: FC = () => {
       notify({ type: "error", message: `Wallet not connected!` });
       return;
     }
-	//const PROGRAM_ID = new PublicKey('WbMTNyvtk8vSMu2AmXV7mKuYrADRNw9GSkNtWKsZ7qe');
-	//console.log(PROGRAM_ID.toString());
-	//console.log(TOKEN_PROGRAM_ID.toString());
+
+
+
     const lamports = await getMinimumBalanceForRentExemptMint(connection);
     const mintKeypair = Keypair.generate();
     const tokenATA = await getAssociatedTokenAddress(new PublicKey(mintKeypair.publicKey), publicKey);
     const TKAmount = (document.getElementById("TKAMT") as HTMLInputElement).value;
+    const tokenname = (document.getElementById("TokenName") as HTMLInputElement).value;
+    const tokensymbol = (document.getElementById("TokenSymbol") as HTMLInputElement).value;
+    const tokenuri = (document.getElementById("TokenUrl") as HTMLInputElement).value;
+
+    const metadataPDA = await findMetadataPda(publicKey);
+
+    console.log(metadataPDA);
+    console.log(tokenname);
+    console.log(TKAmount);
+    console.log(tokensymbol);
+    console.log(tokenuri);
+    console.log(PROGRAM_ID);
+
+    const ON_CHAIN_METADATA = {
+      name: tokenname,
+      symbol: tokensymbol,
+      uri: tokenuri,
+      sellerFeeBasisPoints: 0,
+      creators: null,
+      collection: null,
+      uses: null
+  } as DataV2;
+
     setIsLoading(true);
     try {
       const tx = new Transaction().add(
@@ -62,7 +86,7 @@ export const CreateToken: FC = () => {
 
         createInitializeMintInstruction(
           mintKeypair.publicKey,
-          Number(tokenDecimals),
+          9,
           publicKey,
           publicKey,
           TOKEN_PROGRAM_ID,
@@ -82,11 +106,33 @@ export const CreateToken: FC = () => {
         9
       ),
 
+      createCreateMetadataAccountV2Instruction({
+        metadata: metadataPDA,
+        mint: mintKeypair.publicKey,
+        mintAuthority: publicKey,
+        payer: publicKey,
+        updateAuthority: publicKey,
+        systemProgram: PROGRAM_ID,
+      },
+      { createMetadataAccountArgsV2:
+        {
+          data: ON_CHAIN_METADATA,
+          isMutable: true
+        }
+      }
+    ),
+
+
       );
       const signature = await sendTransaction(tx, connection, {
         signers: [mintKeypair],
       });
-      await  connection.confirmTransaction(signature);
+      const latestBlockHash = await connection.getLatestBlockhash();
+		    await connection.confirmTransaction({
+          blockhash: latestBlockHash.blockhash,
+          lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+          signature: signature,
+        });
       setTokenMintAddress(mintKeypair.publicKey.toString());
       notify({
         type: "success",
@@ -101,10 +147,6 @@ export const CreateToken: FC = () => {
   }, [
     publicKey,
     connection,
-    tokenDecimals,
-    tokenName,
-    tokenSymbol,
-    tokenUri,
     sendTransaction,
   ]);
 
@@ -121,8 +163,8 @@ export const CreateToken: FC = () => {
             <div className="m-auto p-2 text-xl font-normal">Token name</div>
             <div className="m-auto p-2">
               <input
+                id="TokenName"
                 className="rounded border px-4 py-2 text-xl font-normal text-gray-700 focus:border-blue-600 focus:outline-none"
-                onChange={(e) => setTokenName(e.target.value)}
               />
             </div>
           </div>
@@ -133,8 +175,8 @@ export const CreateToken: FC = () => {
             </div>
             <div className="m-auto p-2">
               <input
+                id="TokenSymbol"
                 className="rounded border px-4 py-2 text-xl font-normal text-gray-700 focus:border-blue-600 focus:outline-none"
-                onChange={(e) => setTokenSymbol(e.target.value)}
               />
             </div>
           </div>
@@ -156,8 +198,8 @@ export const CreateToken: FC = () => {
             </div>
             <div className="m-auto p-2">
               <input
+                id="TokenUrl"
                 className="rounded border px-4 py-2 text-xl font-normal text-gray-700 focus:border-blue-600 focus:outline-none"
-                onChange={(e) => setTokenUri(e.target.value)}
                 placeholder="Not working yet"
               />
             </div>
@@ -168,24 +210,10 @@ export const CreateToken: FC = () => {
             </div>
             <div className="m-auto p-2">
               <input
-                className="rounded border px-4 py-2 text-xl font-normal text-gray-700 focus:border-blue-600 focus:outline-none" id="TKAMT"
-                type={"number"}
-                min={0}
-              />
-            </div>
-          </div>
-          <div className="mt-4 sm:grid sm:grid-cols-2 sm:gap-4">
-            <div className="m-auto p-2">
-              <div className="text-xl font-normal">Token decimals</div>
-              <p>Default value is 9 for safecoin.</p>
-            </div>
-            <div className="m-auto p-2">
-              <input
                 className="rounded border px-4 py-2 text-xl font-normal text-gray-700 focus:border-blue-600 focus:outline-none"
+                id="TKAMT"
                 type={"number"}
                 min={0}
-                value={tokenDecimals}
-                onChange={(e) => setTokenDecimals(e.target.value)}
               />
             </div>
           </div>

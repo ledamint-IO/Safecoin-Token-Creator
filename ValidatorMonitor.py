@@ -16,7 +16,8 @@ from safecoin.rpc.api import Client
 from safecoin.rpc.types import MemcmpOpts
 from safecoin.publickey import PublicKey
 
-ValidatorURL = 'C:\\Users\\Administrator\\Documents\\GitHub\\Safecoin-Token-Creator\\ValidatorDB.db'
+#ValidatorURL = 'C:\\Users\\Administrator\\Documents\\GitHub\\Safecoin-Token-Creator\\ValidatorDB.db'
+ValidatorURL = 'ValidatorDB.db'
   
 cursor = sqlite3.connect(ValidatorURL)
 
@@ -38,36 +39,38 @@ def DiscordSend(StringToSend,Discord_Web_Hock):
     
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
+        print("get")
         if('AllValData' in self.path):
             #endpint = api_endpoints[row[5]]
             endpint = api_endpoints['mainnet']
             print(endpint)
-            currentallValIDs = []
-            delinquetallValIDs = []
+            #currentallValIDs = []
+            #delinquetallValIDs = []
+            allValIDs = ["Vote-Identity\n"] 
             client = Client(endpint)
             if(client.is_connected() == True):
                     validatorList = (client.get_vote_accounts()['result']['current'])
                     #print(validatorList)
+                    allValIDs.append("Online\n")
                     for vals in validatorList:
                         nodePubkey = vals['nodePubkey']
                         votePubkey = vals['votePubkey']
                         #print(nodePubkey,votePubkey)
-                        currentallValIDs.append(nodePubkey + "-" + votePubkey)
+                        allValIDs.append(nodePubkey + "-" + votePubkey + "\n")
                     validatorList = (client.get_vote_accounts()['result']['delinquent'])
                     #print(validatorList)
+                    allValIDs.append("\ndelinquent\n")
                     for vals in validatorList:
                         nodePubkey = vals['nodePubkey']
                         votePubkey = vals['votePubkey']
                         #print(nodePubkey,votePubkey)
-                        delinquetallValIDs.append(nodePubkey + "-" + votePubkey)
+                        allValIDs.append(nodePubkey + "-" + votePubkey + " ")
 
 
                     
                     
-            currentallValIDs.sort()
-            delinquetallValIDs.sort()
-            allValIDs = ["Vote-Identity\n"] 
-            allValIDs.append("Online\n %s \n\r delinquent\n %s"% (currentallValIDs,delinquetallValIDs))
+            #currentallValIDs.sort()
+            #delinquetallValIDs.sort()
             
             #print(allValIDs)
             self.send_response(200)
@@ -91,6 +94,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             cursor.close()
             myDelqVal = []
             allDelqVal = []
+            MyValID = []
             for row in rows:
                 print(row)
                 if(PubKey in row[0]):
@@ -100,7 +104,8 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                     print(endpint)
                     client = Client(endpint)
                     ValID = row[2].split()
-                    print(ValID)
+                    print("ValID = ",ValID)
+                    MyValID.append(ValID)
                     if(client.is_connected() == True):
                             validatorList = (client.get_vote_accounts()['result']['delinquent'])
                             #print(validatorList)
@@ -111,16 +116,20 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                                 for ValidatorID in ValID:
                                     if(ValidatorID in nodePubkey or ValidatorID in votePubkey):
                                         print("^^^^^^^^^^^^^^^^^^^found my Validator^^^^^^^^^^^^^^^^^^")
-                                        myDelqVal.append(nodePubkey + "-" + votePubkey)
+                                        myDelqVal.append(nodePubkey + "-" + votePubkey + " ")
                                     else:
-                                        allDelqVal.append(nodePubkey + "-" + votePubkey)
+                                        allDelqVal.append(nodePubkey + "-" + votePubkey + " ")
                             self.send_response(200)
                             self.send_header('Access-Control-Allow-Origin', '*')
                             self.send_header('Content-type', 'application/json')
                             self.end_headers()
+                            ValID = list(dict.fromkeys(ValID))
+                            myDelqVal = list(dict.fromkeys(myDelqVal))
+                            allDelqVal = list(dict.fromkeys(allDelqVal))
                             myDelqVal.sort()
                             allDelqVal.sort()
-                            self.wfile.write(json.dumps((myDelqVal,allDelqVal)).encode())
+                            #print(allDelqVal)
+                            self.wfile.write(json.dumps((myDelqVal,allDelqVal,MyValID)).encode())
                             return
                             
                                         
@@ -136,13 +145,15 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
             myDelqVal.append("To use the Validating montoring feature, please click on the validator monitor setup tab")
             allDelqVal.append("empty")
-            self.wfile.write(json.dumps((myDelqVal,allDelqVal)).encode())
+            MyValID.append("empty")
+            self.wfile.write(json.dumps((myDelqVal,allDelqVal,MyValID)).encode())
 
     def do_HEAD(self):
         self._set_headers()
 
     def do_POST(self):
         #try:
+            print("post")
             global UpdateDB
             form = cgi.FieldStorage(
                     fp=self.rfile,
@@ -163,13 +174,13 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             EmailAdd = "" #for future
 
             discordTest = DiscordSend("Confirming your web hook for validator monitoring",Discord)
-            if(discordTest == False):
-                self.send_response(200)
-                self.send_header('Access-Control-Allow-Origin', '*')
-                self.send_header('Content-type', 'application/json')
-                self.end_headers()
-                self.wfile.write(json.dumps('Discord webhook failed, please try again').encode())
-                return
+            #if(discordTest == False):
+            #    self.send_response(200)
+            #    self.send_header('Access-Control-Allow-Origin', '*')
+            #    self.send_header('Content-type', 'application/json')
+            #    self.end_headers()
+            #    self.wfile.write(json.dumps('Discord webhook failed, please try again').encode())
+            #    return
             
 
             cursor = sqlite3.connect(ValidatorURL)

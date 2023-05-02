@@ -27,7 +27,14 @@ export const RequestAirdrop: FC = () => {
 
     try {
       signature = await connection.requestAirdrop(publicKey, LAMPORTS_PER_SAFE * 10);
-      await  connection.confirmTransaction(signature);
+
+      const latestBlockHash = await connection.getLatestBlockhash();
+		    await connection.confirmTransaction({
+          blockhash: latestBlockHash.blockhash,
+          lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+          signature: signature,
+        });
+
       setIsLoading(false);
       notify({
         type: "success",
@@ -35,12 +42,6 @@ export const RequestAirdrop: FC = () => {
         txid: signature,
       });
 
-      const latestBlockHash = await connection.getLatestBlockhash();
-      await connection.confirmTransaction({
-        blockhash: latestBlockHash.blockhash,
-        lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
-        signature,
-      });
 
       getUserSOLBalance(publicKey, connection);
     } catch (error: any) {
