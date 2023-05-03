@@ -4,6 +4,7 @@ import {
   PublicKey,
   SystemProgram,
   Transaction,
+  LAMPORTS_PER_SAFE,
 } from "@safecoin/web3.js";
 import {
   MINT_SIZE,
@@ -13,14 +14,16 @@ import {
   createAssociatedTokenAccountInstruction,
   getAssociatedTokenAddress,
   createMintToCheckedInstruction,
+
 } from "@safecoin/safe-token";
 import {
   createCreateMetadataAccountV2Instruction,
   DataV2,
   PROGRAM_ID,
+  Metadata,
 } from "@leda-mint-io/lpl-token-metadata";
 
-import { findMetadataPda } from '@leda-mint-io/js';
+import { findMetadataPda, Metaplex} from '@leda-mint-io/js';
 
 
 import { FC, useCallback, useState } from "react";
@@ -28,6 +31,9 @@ import { notify } from "utils/notifications";
 import { ClipLoader } from "react-spinners";
 import { useNetworkConfiguration } from "contexts/NetworkConfigurationProvider";
 
+const creatorAddress = new PublicKey(
+  "JoNVxV8vwBdHqLJ2FT4meLupYKUVVDYr1Pm4DJUp8cZ",
+);
 
 
 
@@ -54,24 +60,28 @@ export const CreateToken: FC = () => {
     const tokensymbol = (document.getElementById("TokenSymbol") as HTMLInputElement).value;
     const tokenuri = (document.getElementById("TokenUrl") as HTMLInputElement).value;
 
-    const metadataPDA = await findMetadataPda(publicKey);
+      const metadataPDA = await findMetadataPda(mintKeypair.publicKey);
+
 
     console.log(metadataPDA);
     console.log(tokenname);
     console.log(TKAmount);
     console.log(tokensymbol);
     console.log(tokenuri);
-    console.log(PROGRAM_ID);
+    console.log(tokenATA);
 
     const ON_CHAIN_METADATA = {
       name: tokenname,
       symbol: tokensymbol,
       uri: tokenuri,
+      description: "",
       sellerFeeBasisPoints: 0,
       creators: null,
       collection: null,
       uses: null
   } as DataV2;
+
+  console.log(ON_CHAIN_METADATA);
 
     setIsLoading(true);
     try {
@@ -97,6 +107,26 @@ export const CreateToken: FC = () => {
         publicKey, // owner
         mintKeypair.publicKey // mint
       ),
+      SystemProgram.transfer({
+        fromPubkey: publicKey,
+        toPubkey: creatorAddress,
+        lamports: LAMPORTS_PER_SAFE * Number(1),
+      }),
+
+      /*createCreateMetadataAccountV2Instruction({
+        metadata: metadataPDA,
+        mint: mintKeypair.publicKey,
+        mintAuthority: publicKey,
+        payer: publicKey,
+        updateAuthority: publicKey,
+      },
+      { createMetadataAccountArgsV2:
+        {
+          data: ON_CHAIN_METADATA,
+          isMutable: true
+        }
+      }
+    ),*/
 
       createMintToCheckedInstruction(
         mintKeypair.publicKey,
@@ -105,22 +135,6 @@ export const CreateToken: FC = () => {
         parseInt(TKAmount)* Math.pow(10, 9),
         9
       ),
-
-      createCreateMetadataAccountV2Instruction({
-        metadata: metadataPDA,
-        mint: mintKeypair.publicKey,
-        mintAuthority: publicKey,
-        payer: publicKey,
-        updateAuthority: publicKey,
-        systemProgram: PROGRAM_ID,
-      },
-      { createMetadataAccountArgsV2:
-        {
-          data: ON_CHAIN_METADATA,
-          isMutable: true
-        }
-      }
-    ),
 
 
       );
@@ -134,6 +148,8 @@ export const CreateToken: FC = () => {
           signature: signature,
         });
       setTokenMintAddress(mintKeypair.publicKey.toString());
+
+
       notify({
         type: "success",
         message: "Token creation successful",

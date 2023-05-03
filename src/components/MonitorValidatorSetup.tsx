@@ -4,8 +4,8 @@ import { Keypair, SystemProgram, Transaction, LAMPORTS_PER_SAFE, PublicKey, Tran
 import { notify } from "../utils/notifications";
 import { ClipLoader } from "react-spinners";
 
-//const VALIDATOR_UPLOAD_ENDPOINT ="https://onestopshopBridge.ledamint.io";
-const VALIDATOR_UPLOAD_ENDPOINT ="http://127.0.0.1:8080";
+const VALIDATOR_UPLOAD_ENDPOINT ="https://onestopshopBridge.ledamint.io";
+//const VALIDATOR_UPLOAD_ENDPOINT ="http://127.0.0.1:8080";
 const allDataENDPOIN = (VALIDATOR_UPLOAD_ENDPOINT + "/AllValData/");
 
 import {
