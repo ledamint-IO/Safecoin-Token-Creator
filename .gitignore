@@ -43,3 +43,4 @@ yarn.lock
 *.pyc
 safecoin/rpc/__pycache__/__init__.cpython-310.pyc
 *.pyc
+ValidatorDB.db

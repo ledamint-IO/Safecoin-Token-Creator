@@ -85,6 +85,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             
         elif('ValData' in self.path):
             PubKey = self.path.split("/")[2]
+            print("ValData")
             print(PubKey)
             cursor = sqlite3.connect(ValidatorURL)
             cur = cursor.cursor()
@@ -146,6 +147,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             myDelqVal.append("To use the Validating montoring feature, please click on the validator monitor setup tab")
             allDelqVal.append("empty")
             MyValID.append("empty")
+            print("Empty")
             self.wfile.write(json.dumps((myDelqVal,allDelqVal,MyValID)).encode())
 
     def do_HEAD(self):
@@ -197,6 +199,14 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                 """, (str(tx),Vote, EmailAdd, Discord, Chain, str(pubkey)))
             cursor.commit()
             cursor.close()
+
+            if(discordTest == False):
+                self.send_response(200)
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.send_header('Content-type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps('Discord webhook failed, please contact J0nnyboi or correct you webhock as you will not be notfied').encode())
+                return
 
             self.send_response(200)
             self.send_header('Access-Control-Allow-Origin', '*')

@@ -204,7 +204,7 @@ export const CreateToken: FC = () => {
                 Paste an existing one or create new
                 <a
                   className="cursor-pointer font-medium text-green-500 hover:text-indigo-500"
-                  href="./upload"
+                  href="/upload"
                 >
                   {" here"}
                 </a>
