@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "set PORT=3001 && next start",
     "lint": "next lint && yarn prettier",
     "prettier": "prettier --check --config ./.prettierrc  \"./**/*.{js,jsx,json,md,ts,tsx,yml,css}\"",
     "prettier:fix": "prettier --config ./.prettierrc --write \"./**/*.{js,jsx,json,md,ts,tsx,yml,css}\""
