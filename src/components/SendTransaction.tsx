@@ -91,7 +91,7 @@ export const SendTransaction: FC = () => {
         />
       </div>
       <button
-        className="... group btn m-2 w-60 animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#3DCE4A] hover:from-pink-500 hover:to-yellow-500 disabled:animate-none "
+        className="... group btn m-2 w-60 animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#51DF5F] hover:from-pink-500 hover:to-yellow-500 disabled:animate-none "
         onClick={onClick}
         disabled={!publicKey}
       >

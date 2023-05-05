@@ -216,7 +216,7 @@ export const MonitorValidator: FC = () => {
         placeholder="Email Not yet in use"
       />
       <button
-        className="px-8 group disabled:animate-none m-2 btn animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#3DCE4A] hover:from-pink-500 hover:to-yellow-500 ..."
+        className="px-8 group disabled:animate-none m-2 btn animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#51DF5F] hover:from-pink-500 hover:to-yellow-500 ..."
         onClick={() => onClick()}
 		    disabled={!publicKey}
 		>

@@ -236,7 +236,7 @@ export const CreateToken: FC = () => {
           </div>
           <div className="mt-4">
             <button
-              className="... group disabled:animate-none btn m-2 animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#3DCE4A] px-8 hover:from-pink-500 hover:to-yellow-500"
+              className="... group disabled:animate-none btn m-2 animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#51DF5F] px-8 hover:from-pink-500 hover:to-yellow-500"
               onClick={createToken}
 			  disabled={!publicKey}
 			>

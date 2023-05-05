@@ -154,7 +154,7 @@ export const UploadMetadata: FC = () => {
           </div>
           <div className="mt-4">
             <button
-              className="... btn  group disabled:animate-none m-2 animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#3DCE4A]  px-8 hover:from-pink-500 hover:to-yellow-500"
+              className="... btn  group disabled:animate-none m-2 animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#51DF5F]  px-8 hover:from-pink-500 hover:to-yellow-500"
               onClick={uploadMetadata}
               disabled={!publicKey}
 		      >

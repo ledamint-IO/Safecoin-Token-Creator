@@ -4,8 +4,8 @@ import { Keypair, SystemProgram, Transaction, LAMPORTS_PER_SAFE, PublicKey, Tran
 import { notify } from "../utils/notifications";
 import { ClipLoader } from "react-spinners";
 
-//const VALIDATOR_UPLOAD_ENDPOINT ="https://onestopshopBridge.ledamint.io";
-const VALIDATOR_UPLOAD_ENDPOINT ="http://127.0.0.1:8080";
+const VALIDATOR_UPLOAD_ENDPOINT ="https://onestopshopBridge.ledamint.io";
+//const VALIDATOR_UPLOAD_ENDPOINT ="http://127.0.0.1:8080";
 
 import {
   useNetworkConfiguration,
@@ -94,7 +94,7 @@ export const ValidatorMonitor: FC = () => {
       />
 
 	  <button
-        className="px-8 group disabled:animate-none m-2 btn animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#3DCE4A] hover:from-pink-500 hover:to-yellow-500 ..."
+        className="px-8 group disabled:animate-none m-2 btn animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#51DF5F] hover:from-pink-500 hover:to-yellow-500 ..."
         onClick={() => onClick()}
 		disabled={!publicKey}
 		>

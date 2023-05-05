@@ -5,7 +5,7 @@ export const HomeView: FC = ({}) => {
   return (
     <div className="mx-auto p-4 md:hero">
       <div className="flex flex-col md:hero-content">
-        <h1 className="bg-gradient-to-tr from-[#90f5c5] to-[#14F195] bg-clip-text text-center text-5xl font-bold text-transparent md:pl-12">
+        <h1 className="bg-gradient-to-tr from-[#90f5c5] to-[#51DF5F] bg-clip-text text-center text-5xl font-bold text-transparent md:pl-12">
           Safecoin Token Creator and Validator monitor{" "}
           <span className="align-top text-sm font-normal text-slate-700">
             v{pkg.version}
@@ -15,7 +15,7 @@ export const HomeView: FC = ({}) => {
           <p>Interactive way to create your own Safecoin token.</p>
           No coding skills or knowledge of token structure required.
         </h4>
-        <ol className="animate-pulse list-inside list-decimal self-center bg-gradient-to-tr from-[#90f5c5] to-[#14F195] bg-clip-text text-2xl font-medium text-transparent">
+        <ol className="animate-pulse list-inside list-decimal self-center bg-gradient-to-tr from-[#51DF5F] to-[#51DF5F] bg-clip-text text-2xl font-medium text-transparent">
           <li>
             <a
               className="cursor-pointer bg-gradient-to-tr bg-clip-text text-transparent hover:from-purple-500 hover:to-yellow-500"
