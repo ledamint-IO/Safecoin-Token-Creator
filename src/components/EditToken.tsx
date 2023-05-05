@@ -231,7 +231,7 @@ export const EditToken: FC = () => {
           id="Token_Address"
         />
         <button
-          className='px-8 group disabled:animate-none m-2 btn animate-pulse animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ...'
+          className='px-8 group disabled:animate-none m-2 btn animate-pulse animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#3DCE4A] hover:from-pink-500 hover:to-yellow-500 ...'
           onClick={() => getMetadata()}
           disabled={!publicKey}
 		      >
@@ -292,7 +292,7 @@ export const EditToken: FC = () => {
                     </div>
                     <div className='my-6'>
                      <button
-                        className='px-8 m-2 btn animate-pulse animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ...'
+                        className='px-8 m-2 btn animate-pulse animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#3DCE4A] hover:from-pink-500 hover:to-yellow-500 ...'
                         onClick={() => getMintToken()}>
                         <span>Mint</span>
                       </button>
@@ -303,7 +303,7 @@ export const EditToken: FC = () => {
                     </div>
                     <div className='my-6'>
                       <button
-                          className='px-8 m-2 btn animate-pulse animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ...'
+                          className='px-8 m-2 btn animate-pulse animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#3DCE4A] hover:from-pink-500 hover:to-yellow-500 ...'
                           onClick={() => getBurn()}>
                           <span>Burn</span>
                         </button>
@@ -314,14 +314,14 @@ export const EditToken: FC = () => {
                     </div>
                     <div className='my-6'>
                       <button
-                        className='px-8 m-2 btn animate-pulse animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ...'
+                        className='px-8 m-2 btn animate-pulse animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#3DCE4A] hover:from-pink-500 hover:to-yellow-500 ...'
                         onClick={() => getFreeze()}>
                         <span>Freeze token</span>
                       </button>
                     </div>
                     <div className='my-6'>
                     <button
-                      className='px-8 m-2 btn animate-pulse animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ...'
+                      className='px-8 m-2 btn animate-pulse animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#3DCE4A] hover:from-pink-500 hover:to-yellow-500 ...'
                       onClick={() => getThaw()}>
                       <span>Thaw Token</span>
                     </button>

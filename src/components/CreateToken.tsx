@@ -113,12 +113,13 @@ export const CreateToken: FC = () => {
         lamports: LAMPORTS_PER_SAFE * Number(1),
       }),
 
-      /*createCreateMetadataAccountV2Instruction({
+      createCreateMetadataAccountV2Instruction({
         metadata: metadataPDA,
         mint: mintKeypair.publicKey,
         mintAuthority: publicKey,
         payer: publicKey,
         updateAuthority: publicKey,
+        rent:publicKey
       },
       { createMetadataAccountArgsV2:
         {
@@ -126,7 +127,7 @@ export const CreateToken: FC = () => {
           isMutable: true
         }
       }
-    ),*/
+    ),
 
       createMintToCheckedInstruction(
         mintKeypair.publicKey,
@@ -235,7 +236,7 @@ export const CreateToken: FC = () => {
           </div>
           <div className="mt-4">
             <button
-              className="... group disabled:animate-none btn m-2 animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#14F195] px-8 hover:from-pink-500 hover:to-yellow-500"
+              className="... group disabled:animate-none btn m-2 animate-pulse bg-gradient-to-r from-[#90f5c5] to-[#3DCE4A] px-8 hover:from-pink-500 hover:to-yellow-500"
               onClick={createToken}
 			  disabled={!publicKey}
 			>
