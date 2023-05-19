@@ -32,12 +32,12 @@ def GetAllValidatorInfo():
     ValList = []
     validatorList = (client.get_vote_accounts()['result']['current'])
     for Val in validatorList:
-        print(Val)
+        #print(Val)
         First = Val['epochCredits'][4][1]
         Second = Val['epochCredits'][4][2]
-        print(Val['nodePubkey'] , "-" ,Val['commission'] , "-" ,First - Second)
-        ValList.append(Val['nodePubkey'] + "-" +Val['commission'] + "-" +First - Second)
-
+        #print(Val['nodePubkey'] , "-" ,Val['commission'] , "-" ,First - Second)
+        ValList.append(str(First - Second) + "-" + str(Val['commission']) + "-" + str(Val['nodePubkey']))
+        ValList.sort(reverse=True)
     return ValList
 
 
@@ -202,7 +202,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             self.send_header('Access-Control-Allow-Origin', '*')
             self.send_header('Content-type', 'application/json')
             self.end_headers()
-            myDelqVal.append("To use the Validating montoring feature, please click on the validator monitor setup tab")
+            myDelqVal.append("To use the Validating montoring feature, please click on the validator monitor setup tab\n or make sure your wallet is connected")
             allDelqVal.append("empty")
             MyValID.append("empty")
             print("Empty")
