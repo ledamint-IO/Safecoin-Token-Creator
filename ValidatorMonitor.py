@@ -27,6 +27,20 @@ api_endpoints={"mainnet":"https://api.mainnet-beta.safecoin.org",
 
 ValidatorCheckTime = 5 #time in minutes between checking for you validator is off line
 
+def GetAllValidatorInfo():
+    client = Client("https://api.mainnet-beta.safecoin.org")
+    ValList = []
+    validatorList = (client.get_vote_accounts()['result']['current'])
+    for Val in validatorList:
+        print(Val)
+        First = Val['epochCredits'][4][1]
+        Second = Val['epochCredits'][4][2]
+        print(Val['nodePubkey'] , "-" ,Val['commission'] , "-" ,First - Second)
+        ValList.append(Val['nodePubkey'] + "-" +Val['commission'] + "-" +First - Second)
+
+    return ValList
+
+
 def DiscordSend(StringToSend,Discord_Web_Hock):
     try:
         print(StringToSend)
@@ -40,7 +54,46 @@ def DiscordSend(StringToSend,Discord_Web_Hock):
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         print("get")
-        if('AllValData' in self.path):
+        if('AllValData/testnet' in self.path):
+            #endpint = api_endpoints[row[5]]
+            endpint = api_endpoints['testnet']
+            print(endpint)
+            #currentallValIDs = []
+            #delinquetallValIDs = []
+            allValIDs = ["Vote-Identity\n"] 
+            client = Client(endpint)
+            if(client.is_connected() == True):
+                    validatorList = (client.get_vote_accounts()['result']['current'])
+                    #print(validatorList)
+                    allValIDs.append("Online\n")
+                    for vals in validatorList:
+                        nodePubkey = vals['nodePubkey']
+                        votePubkey = vals['votePubkey']
+                        #print(nodePubkey,votePubkey)
+                        allValIDs.append(nodePubkey + "-" + votePubkey + "\n")
+                    validatorList = (client.get_vote_accounts()['result']['delinquent'])
+                    #print(validatorList)
+                    allValIDs.append("\ndelinquent\n")
+                    for vals in validatorList:
+                        nodePubkey = vals['nodePubkey']
+                        votePubkey = vals['votePubkey']
+                        #print(nodePubkey,votePubkey)
+                        allValIDs.append(nodePubkey + "-" + votePubkey + " ")
+
+
+                    
+                    
+            #currentallValIDs.sort()
+            #delinquetallValIDs.sort()
+            
+            #print(allValIDs)
+            self.send_response(200)
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps(allValIDs).encode())
+
+        elif('AllValData/mainnet-beta' in self.path):
             #endpint = api_endpoints[row[5]]
             endpint = api_endpoints['mainnet']
             print(endpint)
@@ -79,9 +132,14 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(json.dumps(allValIDs).encode())
 
+        elif('ValList' in self.path):
 
-
-
+            ValList = GetAllValidatorInfo()
+            self.send_response(200)
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps(ValList).encode())
             
         elif('ValData' in self.path):
             PubKey = self.path.split("/")[2]
@@ -100,8 +158,8 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                 print(row)
                 if(PubKey in row[0]):
                     print("got pubkey saved for %s"%row[5])
-                    #endpint = api_endpoints[row[5]]
-                    endpint = api_endpoints['mainnet']
+                    endpint = api_endpoints[row[5]]
+                    #endpint = api_endpoints['mainnet']
                     print(endpint)
                     client = Client(endpint)
                     ValID = row[2].split()

@@ -6,7 +6,7 @@ import { ClipLoader } from "react-spinners";
 
 const VALIDATOR_UPLOAD_ENDPOINT ="https://onestopshopBridge.ledamint.io";
 //const VALIDATOR_UPLOAD_ENDPOINT ="http://127.0.0.1:8080";
-const allDataENDPOIN = (VALIDATOR_UPLOAD_ENDPOINT + "/AllValData/");
+const allDataENDPOINT = (VALIDATOR_UPLOAD_ENDPOINT + "/AllValData/");
 
 import {
   useNetworkConfiguration,
@@ -62,9 +62,9 @@ export async function ValData(
   return body;
 }
 
-async function getData() {
+async function getData(networkConfiguration) {
 
-	  const data = await ValData(allDataENDPOIN);
+	  const data = await ValData(allDataENDPOINT+networkConfiguration);
 	  let valiID =[];
 		for(var i = 0;i<data.length;i++) {
 		    //console.log(data[i]);
@@ -80,8 +80,9 @@ export const MonitorValidator: FC = () => {
   const { publicKey, sendTransaction } = useWallet();
   const [isLoading, setIsLoading] = useState(false);
  const { networkConfiguration } = useNetworkConfiguration();
- //console.log('Networt ' + networkConfiguration);
- getData();
+ console.log('Network ' + networkConfiguration);
+ 
+ getData(networkConfiguration);
   const onClick = useCallback(async () => {
     const voteAccount = (document.getElementById("VoteAcc") as HTMLInputElement).value;
     console.log(voteAccount);

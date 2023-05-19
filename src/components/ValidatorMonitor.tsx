@@ -32,7 +32,7 @@ export const ValidatorMonitor: FC = () => {
 
  async function getData() {
  const data =  await ValData(VALIDATOR_UPLOAD_ENDPOINT + "/ValData/" + publicKey);
- //console.log(data);
+ console.log(data);
  var valiID = [];
  for(var i = 0;i<data[0].length;i++) {
    valiID = valiID + data[0][i]
