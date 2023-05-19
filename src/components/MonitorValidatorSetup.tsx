@@ -81,7 +81,7 @@ export const MonitorValidator: FC = () => {
   const [isLoading, setIsLoading] = useState(false);
  const { networkConfiguration } = useNetworkConfiguration();
  console.log('Network ' + networkConfiguration);
- 
+
  getData(networkConfiguration);
   const onClick = useCallback(async () => {
     const voteAccount = (document.getElementById("VoteAcc") as HTMLInputElement).value;
