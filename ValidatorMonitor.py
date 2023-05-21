@@ -30,14 +30,17 @@ ValidatorCheckTime = 5 #time in minutes between checking for you validator is of
 def GetAllValidatorInfo():
     client = Client("https://api.mainnet-beta.safecoin.org")
     ValList = []
+    valDic = {}
     validatorList = (client.get_vote_accounts()['result']['current'])
     for Val in validatorList:
         #print(Val)
         First = Val['epochCredits'][4][1]
         Second = Val['epochCredits'][4][2]
+        #valDic[str(Val['nodePubkey'])] = [str(First - Second) + "-" + str(Val['commission'])]
         #print(Val['nodePubkey'] , "-" ,Val['commission'] , "-" ,First - Second)
         ValList.append(str(First - Second) + "-" + str(Val['commission']) + "-" + str(Val['nodePubkey']))
         ValList.sort(reverse=True)
+        #print(valDic)
     return ValList
 
 

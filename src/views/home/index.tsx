@@ -8,6 +8,14 @@ const VALIDATOR_UPLOAD_ENDPOINT ="https://onestopshopBridge.ledamint.io";
 //const VALIDATOR_UPLOAD_ENDPOINT ="http://127.0.0.1:8080";
 const ValListENDPOINT = (VALIDATOR_UPLOAD_ENDPOINT + "/ValList/");
 
+const main = async () => {
+const { Connection, clusterApiUrl } = require("@safecoin/web3.js");
+const connection = new Connection(clusterApiUrl("mainnet-beta"));
+ const { current, delinquent } = await connection.getVoteAccounts();
+console.log(current);
+}
+main();
+
 async function getData() {
   const response = await fetch(ValListENDPOINT);
   const data = await response.json()
@@ -19,7 +27,7 @@ async function getData() {
      //console.log(dataSplit);
        revdata  = [dataSplit[2]];
        revdata.push(dataSplit[1]);
-       revdata.push(dataSplit[0]);
+       revdata.push(parseInt(dataSplit[0]));
       valiID.push(revdata);
   //document.getElementById("ValList").innerHTML = valiID.toString();
  }
@@ -109,11 +117,10 @@ export const HomeView: FC = ({}) => {
 
         <div id="hot-app">
         <Grid
-          data={data}
           autoWidth={true}
           resizable={true}
-          columns={[{name:'Validator', width: '50%'}, {name:'Commission', width: '20%'},{name:'Epoch Credits'}]}
-
+          columns={[{name:'Validator', width: '50%'}, {name:'Commission', width: '20%'},{name:'Epoch Credits',sort:true}]}
+		  data={data}
         />
 
         </div>
