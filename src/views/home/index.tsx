@@ -1,7 +1,7 @@
 import { FC, useState,  useEffect } from "react";
 import pkg from "../../../package.json";
 
-import { Grid } from "gridjs-react";
+import { Grid , _ } from "gridjs-react";
 import "gridjs/dist/theme/mermaid.css";
 
 import { useConnection, useWallet } from "@j0nnyboi/wallet-adapter-react";
@@ -9,7 +9,6 @@ import { useConnection, useWallet } from "@j0nnyboi/wallet-adapter-react";
 const VALIDATOR_UPLOAD_ENDPOINT ="https://onestopshopBridge.ledamint.io";
 //const VALIDATOR_UPLOAD_ENDPOINT ="http://127.0.0.1:8080";
 const ValListENDPOINT = (VALIDATOR_UPLOAD_ENDPOINT + "/ValList/");
-
 
 
 const ValidatorData = async (connection) => {
@@ -111,7 +110,20 @@ export const HomeView: FC = ({}) => {
         <Grid
           autoWidth={true}
           resizable={true}
-          columns={[{name:'Validator', width: '50%'}, {name:'Commission', width: '20%'},{name:'Epoch Credits',sort:true}]}
+          autoGroupColumnDef={[{field:'Epoch Credits'},
+            {sort:'asc'}] // 'asc' or 'desc'
+          }
+          columns={[{name:'Validator', width: '50%'}, {name:'Commission', width: '20%'},{name:'Epoch Credits',sort: {
+            compare: (a, b) => {
+              if (a > b) {
+                return 1;
+              } else if (b > a) {
+                return -1;
+              } else {
+                return 0;
+              }
+            }
+          }}]}
 		  data={data}
         />
 

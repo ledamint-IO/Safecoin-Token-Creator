@@ -1,8 +1,11 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useState, useEffect } from 'react';
 import { useConnection, useWallet } from '@j0nnyboi/wallet-adapter-react';
 import { Keypair, SystemProgram, Transaction, LAMPORTS_PER_SAFE, PublicKey, TransactionSignature, TransactionConfirmationStrategy } from '@safecoin/web3.js';
 import { notify } from "../utils/notifications";
 import { ClipLoader } from "react-spinners";
+
+import { Grid } from "gridjs-react";
+import "gridjs/dist/theme/mermaid.css";
 
 const VALIDATOR_UPLOAD_ENDPOINT ="https://onestopshopBridge.ledamint.io";
 //const VALIDATOR_UPLOAD_ENDPOINT ="http://127.0.0.1:8080";
@@ -62,17 +65,28 @@ export async function ValData(
   return body;
 }
 
-async function getData(networkConfiguration) {
-
-	  const data = await ValData(allDataENDPOINT+networkConfiguration);
+async function getData(connection) {
+  const { current, delinquent } = await connection.getVoteAccounts();
 	  let valiID =[];
-		for(var i = 0;i<data.length;i++) {
-		    //console.log(data[i]);
-			  valiID = valiID + data[i]
-    document.getElementById("allVal").innerHTML = valiID.toString();
+    valiID.push(['Currently Online']);
+		for(var i = 0;i<current.length;i++) {
+		    //console.log(data[i]);#
+			  valiID.push([current[i]['nodePubkey']]);
+
 		}
+    valiID.push(['']);
+    valiID.push(['Delinquent']);
+		for(var i = 0;i<delinquent.length;i++) {
+		    //console.log(data[i]);
+			  valiID.push([delinquent[i]['nodePubkey']]);
+		}
+
+    //console.log(valiID);
+    return valiID
   }
 
+
+  
 
 
 export const MonitorValidator: FC = () => {
@@ -82,7 +96,16 @@ export const MonitorValidator: FC = () => {
  const { networkConfiguration } = useNetworkConfiguration();
  console.log('Network ' + networkConfiguration);
 
- getData(networkConfiguration);
+ const [data, setData] = useState(['Getting', 'Data'])
+
+  //setData([Data]);
+   useEffect(() => {
+    getData(connection).then((Data) =>{
+    setData(Data);
+    console.log(Data);
+    });
+  },[]);
+
   const onClick = useCallback(async () => {
     const voteAccount = (document.getElementById("VoteAcc") as HTMLInputElement).value;
     console.log(voteAccount);
@@ -225,13 +248,14 @@ export const MonitorValidator: FC = () => {
           <span className="block group-disabled:hidden">Pay and Monitor</span>
       </button>
 
-	   <textarea
-	   className="form-control block mb-2 w-full px-2 py-2 font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-	      id="allVal"
-        placeholder=""
-        rows={20}
-		    cols={115}
-      />
+      <div id="hot-app">
+        <Grid
+          autoWidth={true}
+          resizable={true}
+          columns={[{name:'Validator'}]}
+		  data={data}
+        />
+        </div>
     </div>
 	 </div>
   )
