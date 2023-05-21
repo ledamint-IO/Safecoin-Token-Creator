@@ -4,34 +4,25 @@ import pkg from "../../../package.json";
 import { Grid } from "gridjs-react";
 import "gridjs/dist/theme/mermaid.css";
 
+import { useConnection, useWallet } from "@j0nnyboi/wallet-adapter-react";
+
 const VALIDATOR_UPLOAD_ENDPOINT ="https://onestopshopBridge.ledamint.io";
 //const VALIDATOR_UPLOAD_ENDPOINT ="http://127.0.0.1:8080";
 const ValListENDPOINT = (VALIDATOR_UPLOAD_ENDPOINT + "/ValList/");
 
-const main = async () => {
-const { Connection, clusterApiUrl } = require("@safecoin/web3.js");
-const connection = new Connection(clusterApiUrl("mainnet-beta"));
- const { current, delinquent } = await connection.getVoteAccounts();
-console.log(current);
-}
-main();
 
-async function getData() {
-  const response = await fetch(ValListENDPOINT);
-  const data = await response.json()
-  //console.log(data);
+
+const ValidatorData = async (connection) => {
   let valiID =[];
   let revdata = [];
-  for(var i = 0;i<data.length;i++) {
-    var dataSplit = data[i].split('-');
-     //console.log(dataSplit);
-       revdata  = [dataSplit[2]];
-       revdata.push(dataSplit[1]);
-       revdata.push(parseInt(dataSplit[0]));
-      valiID.push(revdata);
-  //document.getElementById("ValList").innerHTML = valiID.toString();
+  const { current, delinquent } = await connection.getVoteAccounts();
+  for(var i = 0;i<current.length;i++) {
+    const EpochCredits = (current[i]['epochCredits'][4]); 
+    revdata  = [current[i]['nodePubkey']];
+    revdata.push(current[i]['commission']);
+    revdata.push(parseInt(EpochCredits[1])- parseInt(EpochCredits[2]));
+    valiID.push(revdata);
  }
- //console.log(valiID);
  return valiID;
 }
 
@@ -39,10 +30,11 @@ async function getData() {
 
 export const HomeView: FC = ({}) => {
   const [data, setData] = useState(['Getting', 'Data','Now'])
+  const { connection } = useConnection();
 
   //setData([Data]);
   useEffect(() => {
-    getData().then((Data) =>{
+    ValidatorData(connection).then((Data) =>{
     setData(Data);
     });
   },[]);
