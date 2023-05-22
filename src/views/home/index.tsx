@@ -7,7 +7,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 
 import { useConnection, useWallet } from "@j0nnyboi/wallet-adapter-react";
-import { truncate } from "fs/promises";
+import { ColDef } from 'ag-grid-community';
 
 const VALIDATOR_UPLOAD_ENDPOINT ="https://onestopshopBridge.ledamint.io";
 //const VALIDATOR_UPLOAD_ENDPOINT ="http://127.0.0.1:8080";
@@ -44,11 +44,10 @@ export const HomeView: FC = ({}) => {
   },[]);
 
   
-
-  const [columnDefs] = useState([
+  const [columnDefs, setColumnDefs] = useState<ColDef[]>([
     { field: 'Validator', width: 450 },
     { field: 'Commission', width: 150 },
-    { field: 'EpochCredits', width: 190, sort: 'desc' }
+    { field: 'EpochCredits', width: 190, sortable: true, sort: 'desc' },
   ])
 
   return (
