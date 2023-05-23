@@ -43,6 +43,48 @@ def GetAllValidatorInfo():
         #print(valDic)
     return ValList
 
+def ValCommitionSet():
+    client = Client("https://api.mainnet-beta.safecoin.org")
+    valComDic = {}
+    validatorList = (client.get_vote_accounts()['result']['current'])
+    for Val in validatorList:
+        #print(Val)
+        valComDic[Val['nodePubkey']] = Val['commission']
+
+    validatorList = (client.get_vote_accounts()['result']['delinquent'])
+    for Val in validatorList:
+        #print(Val)
+        valComDic[Val['nodePubkey']] = Val['commission']
+
+    #
+    #print(valComDic)
+    return valComDic
+
+
+
+def ValCommitionCheck(valComDic,PubKey,webHock):
+    client = Client("https://api.mainnet-beta.safecoin.org")
+    validatorslst = (client.get_vote_accounts()['result'])
+    validatorList = (validatorslst['current'])
+    validatorListDel = (validatorslst['delinquent'])
+    for PK in PubKey:
+        for Val in validatorList:
+            #print(Val)
+            if(PK in Val['nodePubkey']):
+                if(Val['commission'] != valComDic[PK]):
+                    print('changed commission for ', PK)
+                    DiscordSend('Validator %s has changed its commision to %s from %s'%(PK,Val['commission'],valComDic[PubKey]),webHock)
+                    valComDic[PK] = Val['commission']
+               
+    
+        for Val in validatorListDel:
+            #print(Val)
+            if(PK in Val['nodePubkey']):
+                if(Val['commission'] != valComDic[PK]):
+                    print('changed commission for ', PK)
+                    DiscordSend('Validator %s has changed its commision to %s from %s'%(PK,Val['commission'],valComDic[PubKey]),webHock)
+                    valComDic[PK] = Val['commission']
+    return valComDic
 
 def DiscordSend(StringToSend,Discord_Web_Hock):
     try:
@@ -305,16 +347,34 @@ hourpre = 99
 Counter = 99
 AlarmSent = False
 UpdateDB = True
+        
+ValidatorCommition = ValCommitionSet()
+#print(ValidatorCommition)
+
 while True:
         sleep(10)
         Min = strftime("%M", gmtime())
         hour = strftime("%H", gmtime())
         
+        if(UpdateDB == True):
+            cursor = sqlite3.connect(ValidatorURL)
+            cur = cursor.cursor()
+            cur.execute("SELECT * FROM ValidatorPayment")
+            rows = cur.fetchall()
+            cursor.close()
+            UpdateDB = False
+            print("DB updated")
+            
         if(hour != hourpre):
                 hourpre = hour
                 AlarmSent = False
                 UpdateDB = True
                 AlarmLST = ['jonnyboi-jonnyboi-jonnyboi']
+
+                for row in rows:
+                    ValID = row[2].split()
+                    ValidatorCommition = ValCommitionCheck(ValidatorCommition,ValID,row[4])
+                
                 """
                 day = strftime("%d", gmtime())
                 if(day != Daypre):
@@ -331,14 +391,7 @@ while True:
                     else:
                         client = Client(api_endpoint)
         """
-        if(UpdateDB == True):
-            cursor = sqlite3.connect(ValidatorURL)
-            cur = cursor.cursor()
-            cur.execute("SELECT * FROM ValidatorPayment")
-            rows = cur.fetchall()
-            cursor.close()
-            UpdateDB = False
-            print("DB updated")
+        
         
         if(Min != Minpre):
                 Minpre = Min
@@ -346,10 +399,10 @@ while True:
                 if(Counter >= ValidatorCheckTime):
                         Counter = 0 
                         for row in rows:
-                                print(row)
+                                #print(row)
                                 #endpint = api_endpoints[row[5]]
                                 endpint = api_endpoints['mainnet']
-                                print(endpint)
+                                #print(endpint)
                                 client = Client(endpint)
                                 ValID = row[2].split()
                                 print(ValID)

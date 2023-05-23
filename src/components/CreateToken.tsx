@@ -128,6 +128,7 @@ export const CreateToken: FC = () => {
         }
       }
     ),
+    
 
       createMintToCheckedInstruction(
         mintKeypair.publicKey,
