@@ -3,6 +3,7 @@ import { LAMPORTS_PER_SAFE, TransactionSignature } from "@safecoin/web3.js";
 import { FC, useCallback, useState} from "react";
 import { notify } from "../utils/notifications";
 import useUserSOLBalanceStore from "../stores/useUserSOLBalanceStore";
+import { useNetworkConfiguration } from "../contexts/NetworkConfigurationProvider";
 
 import { ClipLoader } from "react-spinners";
 
@@ -11,6 +12,7 @@ export const RequestAirdrop: FC = () => {
   const { publicKey } = useWallet();
   const { getUserSOLBalance } = useUserSOLBalanceStore();
   const [isLoading, setIsLoading] = useState(false);
+  const { networkConfiguration, setNetworkConfiguration } = useNetworkConfiguration();
 
   const onClick = useCallback(async () => {
     if (!publicKey) {
@@ -64,6 +66,7 @@ export const RequestAirdrop: FC = () => {
         </div>
       )}
     <div className="mt-4">
+      {/*}
       <div className="p-2">
         <div className="text-xl font-normal">Request airdrop</div>
       </div>
@@ -75,7 +78,9 @@ export const RequestAirdrop: FC = () => {
         <div className="hidden group-disabled:block">Wallet not connected</div>
         <span className="block group-disabled:hidden">Airdrop 10 Safe</span>
       </button>
+      */}
     </div>
+     
     </div>
   );
 };

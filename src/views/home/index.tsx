@@ -48,6 +48,7 @@ export const HomeView: FC = ({}) => {
     { field: 'Validator', width: 450 },
     { field: 'Commission', width: 150 },
     { field: 'EpochCredits', width: 190, sortable: true, sort: 'desc' },
+  
   ])
 
   return (
@@ -61,7 +62,7 @@ export const HomeView: FC = ({}) => {
           <span className="align-top text-sm font-normal text-slate-700">
           </span>
         </h1>
-
+        
         <h4 className="bg-gradient-to-tr from-[#90f5c5] to-[#51DF5F] bg-clip-text text-center text-2xl font-bold text-transparent md:pl-12">
          Validator Battle Arena
           <span className="align-top text-sm font-normal text-slate-700">
@@ -71,6 +72,7 @@ export const HomeView: FC = ({}) => {
         <div className="ag-theme-alpine" style={{height: 1000, width: 810}}>
            <AgGridReact
                rowData={data}
+               domLayout={'autoHeight'}
                columnDefs={columnDefs}>
            </AgGridReact>
        </div>
