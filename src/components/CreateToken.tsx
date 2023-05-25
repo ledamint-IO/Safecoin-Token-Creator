@@ -76,7 +76,7 @@ export const CreateToken: FC = () => {
       uri: tokenuri,
       description: "",
       sellerFeeBasisPoints: 0,
-      creators: null,
+      creators: publicKey, //might need wallet pubkey to work
       collection: null,
       uses: null
   } as DataV2;
@@ -94,7 +94,7 @@ export const CreateToken: FC = () => {
           programId: TOKEN_PROGRAM_ID,
         }),
 
-        createInitializeMintInstruction(
+        createInitializeMintInstruction(//wrong function for mint creation need to change
           mintKeypair.publicKey,
           9,
           publicKey,

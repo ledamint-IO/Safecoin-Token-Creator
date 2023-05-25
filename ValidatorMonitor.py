@@ -75,6 +75,7 @@ def ValCommitionCheck(valComDic,PubKey,webHock):
                     print('changed commission for ', PK)
                     DiscordSend('Validator %s has changed its commision to %s from %s'%(PK,Val['commission'],valComDic[PubKey]),webHock)
                     valComDic[PK] = Val['commission']
+                break
                
     
         for Val in validatorListDel:
@@ -84,6 +85,7 @@ def ValCommitionCheck(valComDic,PubKey,webHock):
                     print('changed commission for ', PK)
                     DiscordSend('Validator %s has changed its commision to %s from %s'%(PK,Val['commission'],valComDic[PubKey]),webHock)
                     valComDic[PK] = Val['commission']
+                break
     return valComDic
 
 def DiscordSend(StringToSend,Discord_Web_Hock):
@@ -223,16 +225,18 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                                         myDelqVal.append(nodePubkey + "-" + votePubkey + " ")
                                     else:
                                         allDelqVal.append(nodePubkey + "-" + votePubkey + " ")
-                            self.send_response(200)
-                            self.send_header('Access-Control-Allow-Origin', '*')
-                            self.send_header('Content-type', 'application/json')
-                            self.end_headers()
+                            
+
                             ValID = list(dict.fromkeys(ValID))
                             myDelqVal = list(dict.fromkeys(myDelqVal))
                             allDelqVal = list(dict.fromkeys(allDelqVal))
                             myDelqVal.sort()
                             allDelqVal.sort()
                             #print(allDelqVal)
+                            self.send_response(200)
+                            self.send_header('Access-Control-Allow-Origin', '*')
+                            self.send_header('Content-type', 'application/json')
+                            self.end_headers()
                             self.wfile.write(json.dumps((myDelqVal,allDelqVal,MyValID)).encode())
                             return
                             
@@ -242,15 +246,14 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                         
 
                             
-            
+            myDelqVal.append("To use the Validating monitoring feature, please click on the validator monitor setup tab\n or make sure your wallet is connected")
+            allDelqVal.append("")
+            MyValID.append("")
+            #print("Empty")
             self.send_response(200)
             self.send_header('Access-Control-Allow-Origin', '*')
             self.send_header('Content-type', 'application/json')
             self.end_headers()
-            myDelqVal.append("To use the Validating montoring feature, please click on the validator monitor setup tab\n or make sure your wallet is connected")
-            allDelqVal.append("empty")
-            MyValID.append("empty")
-            print("Empty")
             self.wfile.write(json.dumps((myDelqVal,allDelqVal,MyValID)).encode())
 
     def do_HEAD(self):
@@ -279,13 +282,6 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             EmailAdd = "" #for future
 
             discordTest = DiscordSend("Confirming your web hook for validator monitoring",Discord)
-            #if(discordTest == False):
-            #    self.send_response(200)
-            #    self.send_header('Access-Control-Allow-Origin', '*')
-            #    self.send_header('Content-type', 'application/json')
-            #    self.end_headers()
-            #    self.wfile.write(json.dumps('Discord webhook failed, please try again').encode())
-            #    return
             
 
             cursor = sqlite3.connect(ValidatorURL)
@@ -315,7 +311,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             self.send_header('Access-Control-Allow-Origin', '*')
             self.send_header('Content-type', 'application/json')
             self.end_headers()
-            self.wfile.write(json.dumps('ok').encode())
+            self.wfile.write(json.dumps('Monitoring data added correctly to server').encode())
             UpdateDB = True
             
 
@@ -375,22 +371,6 @@ while True:
                     ValID = row[2].split()
                     ValidatorCommition = ValCommitionCheck(ValidatorCommition,ValID,row[4])
                 
-                """
-                day = strftime("%d", gmtime())
-                if(day != Daypre):
-                    Daypre = day
-                    if(client.is_connected()): 
-                        VoteBalance = int(client.get_balance(ValidatorVote)['result']['value'])/1000000000
-                        print("Vote account balance = ",VoteBalance)
-                        if(VoteBalance > VoteBalanceWarn):
-                            DiscordSend("you have earnt to much safe, to be on your validator, time to move it,amount is %s use (~/Safecoin/target/release/safecoin withdraw-from-vote-account VoteAddress DesternationWallet amount)"% VoteBalance)
-                        IDBalance = int(client.get_balance(ValidatorID)['result']['value'])/1000000000
-                        print("Identity account balance = ",IDBalance)
-                        if(IDBalance < IdentityBalanceWarn):
-                            DiscordSend("Running out of safe, you only have %s left to vote with, please add some to address %s" % (IDBalance,ValidatorID))
-                    else:
-                        client = Client(api_endpoint)
-        """
         
         
         if(Min != Minpre):
