@@ -1,4 +1,4 @@
-import { FC, useState,  useEffect } from "react";
+import { FC, useState,  useEffect, useRef } from "react";
 import pkg from "../../../package.json";
 
 import { AgGridReact } from 'ag-grid-react';
@@ -34,13 +34,15 @@ const ValidatorData = async (connection) => {
 export const HomeView: FC = ({}) => {
   const [data, setData] = useState([])
   const { connection } = useConnection();
-
+  const intervalRef = useRef<null | NodeJS.Timeout>(null);
   //setData([Data]);
   useEffect(() => {
+    intervalRef.current = setInterval(() => {
     ValidatorData(connection).then((Data) =>{
     setData(Data);
     console.log(Data);
     });
+  },60000)
   },[]);
 
   
