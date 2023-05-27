@@ -36,6 +36,14 @@ export const HomeView: FC = ({}) => {
   const { connection } = useConnection();
   const intervalRef = useRef<null | NodeJS.Timeout>(null);
   //setData([Data]);
+
+  useEffect(() => {
+    ValidatorData(connection).then((Data) =>{
+    setData(Data);
+    console.log(Data);
+    });
+  },[]);
+  
   useEffect(() => {
     intervalRef.current = setInterval(() => {
     ValidatorData(connection).then((Data) =>{
@@ -44,6 +52,8 @@ export const HomeView: FC = ({}) => {
     });
   },60000)
   },[]);
+
+  
 
   
   const [columnDefs, setColumnDefs] = useState<ColDef[]>([
