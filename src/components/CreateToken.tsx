@@ -76,7 +76,7 @@ export const CreateToken: FC = () => {
       uri: tokenuri,
       description: "",
       sellerFeeBasisPoints: 0,
-      creators: publicKey, //might need wallet pubkey to work
+      creators: null, //might need wallet pubkey to work
       collection: null,
       uses: null
   } as DataV2;
