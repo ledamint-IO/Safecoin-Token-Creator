@@ -26,6 +26,7 @@ const ValidatorData = async (connection) => {
       epochCridit = parseInt(EpochCredits[1])- parseInt(EpochCredits[2])
     } catch (error) {
       console.log('No epoch Credits');
+      epochCridit = 0;
     } 
     revdata  = {'Validator':current[i]['nodePubkey'],
     'Commission':current[i]['commission'],
