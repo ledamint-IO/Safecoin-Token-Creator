@@ -5,6 +5,7 @@ import {
   SystemProgram,
   Transaction,
   LAMPORTS_PER_SAFE,
+  Connection,
 } from "@safecoin/web3.js";
 import {
   MINT_SIZE,
@@ -39,6 +40,7 @@ const creatorAddress = new PublicKey(
 
 export const CreateToken: FC = () => {
   const { connection } = useConnection();
+  //const connection = new Connection('https://api.mainnet-beta.safecoin.org', 'confirmed');
   const { publicKey, sendTransaction } = useWallet();
   const { networkConfiguration } = useNetworkConfiguration();
   const [tokenMintAddress, setTokenMintAddress] = useState("");
@@ -76,7 +78,8 @@ export const CreateToken: FC = () => {
       uri: tokenuri,
       description: "",
       sellerFeeBasisPoints: 0,
-      creators: null, //might need wallet pubkey to work
+      /*{creators: [{'address':publicKey,'verified':false, 'share':100}], //might need wallet pubkey to work}*/
+      creators:null,
       collection: null,
       uses: null
   } as DataV2;

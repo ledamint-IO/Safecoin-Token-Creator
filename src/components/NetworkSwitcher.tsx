@@ -18,6 +18,7 @@ const NetworkSwitcher: FC = () => {
         className="select max-w-xs bg-green-300 "
       >
         <option value="mainnet-beta">mainnet</option>
+        <option value="testnet">testnet</option>
       </select>
     </label>
   );

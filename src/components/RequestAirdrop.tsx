@@ -26,7 +26,7 @@ export const RequestAirdrop: FC = () => {
     }
     setIsLoading(true);
     let signature: TransactionSignature = "";
-
+    console.log(connection.rpcEndpoint);
     try {
       signature = await connection.requestAirdrop(publicKey, LAMPORTS_PER_SAFE * 10);
 
@@ -66,7 +66,7 @@ export const RequestAirdrop: FC = () => {
         </div>
       )}
     <div className="mt-4">
-      {/*}
+      
       <div className="p-2">
         <div className="text-xl font-normal">Request airdrop</div>
       </div>
@@ -78,7 +78,7 @@ export const RequestAirdrop: FC = () => {
         <div className="hidden group-disabled:block">Wallet not connected</div>
         <span className="block group-disabled:hidden">Airdrop 10 Safe</span>
       </button>
-      */}
+      
     </div>
      
     </div>
