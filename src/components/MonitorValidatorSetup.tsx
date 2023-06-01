@@ -68,12 +68,13 @@ export async function ValData(
 async function getData(connection) {
   const { current, delinquent } = await connection.getVoteAccounts();
 	  let valiID =[];
+
     valiID.push(['Currently Online']);
 		for(var i = 0;i<current.length;i++) {
 		    //console.log(data[i]);#
 			  valiID.push([current[i]['nodePubkey']]);
-
 		}
+
     valiID.push(['']);
     valiID.push(['Delinquent']);
 		for(var i = 0;i<delinquent.length;i++) {
@@ -94,7 +95,7 @@ export const MonitorValidator: FC = () => {
   const { publicKey, sendTransaction } = useWallet();
   const [isLoading, setIsLoading] = useState(false);
  const { networkConfiguration } = useNetworkConfiguration();
- console.log('Network ' + networkConfiguration);
+ //console.log('Network ' + networkConfiguration);
 
  const [data, setData] = useState(['Getting', 'Data'])
 
@@ -102,7 +103,7 @@ export const MonitorValidator: FC = () => {
    useEffect(() => {
     getData(connection).then((Data) =>{
     setData(Data);
-    console.log(Data);
+    //console.log(Data);
     });
   },[]);
 
@@ -121,8 +122,8 @@ export const MonitorValidator: FC = () => {
 
     const discord = (document.getElementById("Discord") as HTMLInputElement).value;
     const email = (document.getElementById("Email") as HTMLInputElement).value;
-    console.log(discord);
-    console.log(email);
+    //console.log(discord);
+    //console.log(email);
 	    if(discord == "" && email == ""){
         setIsLoading(false);
 			console.log("no discord webhook or email");
@@ -167,11 +168,11 @@ export const MonitorValidator: FC = () => {
         data.append('Chain', networkConfiguration);
         data.append('publicKey', publicKey.toString());
 
-        console.log(data);
+        //console.log(data);
 
         const result: IValidatorResult = await uploadToValidator(data);
         setIsLoading(false);
-        console.log(result);
+        //console.log(result);
         console.log('Added to Monitoring server');
         notify({
             type: "success",

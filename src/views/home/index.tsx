@@ -17,20 +17,15 @@ const ValListENDPOINT = (VALIDATOR_UPLOAD_ENDPOINT + "/ValList/");
 const ValidatorData = async (connection) => {
   let valiID =[];
   let revdata = {};
-  let epochCridit = 0;
   const { current, delinquent } = await connection.getVoteAccounts();
-  console.log(current);
+  //console.log(current);
   for(var i = 0;i<current.length;i++) {
-    try {
-      const EpochCredits = (current[i]['epochCredits'][4]);
-      epochCridit = parseInt(EpochCredits[1])- parseInt(EpochCredits[2])
-    } catch (error) {
-      console.log('No epoch Credits');
-      epochCridit = 0;
-    } 
+      const EpochArray = (current[i]['epochCredits']);
+      const EpochCredits = EpochArray.at(-1) 
+      //console.log(EpochCredits);
     revdata  = {'Validator':current[i]['nodePubkey'],
     'Commission':current[i]['commission'],
-    'EpochCredits':epochCridit};
+    'EpochCredits':parseInt(EpochCredits[1])- parseInt(EpochCredits[2])};
     valiID.push(revdata);
  }
  return valiID;
